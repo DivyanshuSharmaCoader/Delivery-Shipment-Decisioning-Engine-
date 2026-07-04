@@ -4,9 +4,6 @@ from ..dependencies import SellerServiceDep, SessionDep, get_seller_access_token
 from ..schemas.seller import SellerRead
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
-from app.core.security import oauth2_scheme
-from app.utils import decode_access_token
-from app.database.models import Seller
 from app.database.redis import add_jti_to_blacklist
 
 router = APIRouter(prefix="/seller", tags=["Seller"])

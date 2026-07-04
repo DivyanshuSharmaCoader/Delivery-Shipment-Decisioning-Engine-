@@ -4,13 +4,11 @@ from ..dependencies import SellerServiceDep, SessionDep, get_partner_access_toke
 from ..schemas.delivery_partner import DeliveryPartnerRead, DeliveryPartnerUpdate
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
-from app.core.security import oauth2_scheme
-from app.utils import decode_access_token
-from app.database.models import Seller
 from app.database.redis import add_jti_to_blacklist
 
 router = APIRouter(prefix="/partner", tags=["Delivery Partner"])
 
+#Register a delivery partner
 @router.post("/signup", response_model= DeliveryPartnerRead)
 async def register_delivery_partner(
     seller: DeliveryPartnerCreate,
@@ -38,8 +36,16 @@ async def update_delivery_partner(
     partner: DeliveryPartnerDep,
     service: DeliveryPartnerServiceDep,
 ):
+    # Update data with given fields
+    update = partner_update.model_dump(exclude_none=True)
+
+    if not update:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="No data provided to update",
+        )
     return await service.update(
-        partner.sqlmodel_update(partner_update)
+        partner.sqlmodel_update(update)
     ) 
 
 #Logout the delivery partner

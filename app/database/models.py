@@ -13,6 +13,7 @@ class ShipmentStatus(str, Enum):
     in_transit = "in_transit"
     out_for_delivery = "out_for_delivery"
     delivered = "delivered"
+    cancelled = "cancelled"
 
 
 class Shipment(SQLModel, table = True):
@@ -31,11 +32,18 @@ class Shipment(SQLModel, table = True):
             default=datetime.now,
         )
     )
+
+    client_contact_email: EmailStr
+    client_contact_phone: int | None
+
     content: str
     weight: float = Field(le=25)
     destination: int
-    status: ShipmentStatus
     estimated_delivery: datetime
+    timeline: list["ShipmentEvent"] = Relationship(
+        back_populates="shipment",
+        sa_relationship_kwargs={"lazy": "selectin"},
+    )
     seller_id: UUID = Field(foreign_key="seller.id")
     seller: "Seller" = Relationship(
         back_populates="shipments",
@@ -49,6 +57,36 @@ class Shipment(SQLModel, table = True):
         back_populates="shipments",
         sa_relationship_kwargs={"lazy": "selectin"},
     )
+
+    @property
+    def status(self):
+        return self.timeline[-1].status if len(self.timeline) > 0 else None
+
+class ShipmentEvent(SQLModel, table=True):
+    __tablename__="shipment_event"
+    id: UUID = Field(
+        sa_column=Column(
+            postgresql.UUID,
+            default=uuid4,
+            primary_key=True,
+        )
+    )
+    created_at: datetime = Field(
+        sa_column=Column(
+            postgresql.TIMESTAMP,
+            default=datetime.now,
+        )
+    )
+    
+    location: int
+    status: ShipmentStatus
+    discription: str | None = Field(default = None)
+    shipment_id: UUID = Field(foreign_key = "shipment.id")
+    shipment: Shipment = Relationship(
+        back_populates= "timeline",
+        sa_relationship_kwargs={"lazy": "selectin"},
+    )
+
 
 class User(SQLModel):
     name: str
@@ -70,6 +108,10 @@ class Seller(User, table= True):
             default=datetime.now,
         )
     )
+
+    address: str | None = Field(default=None)
+    zip_code: int | None = Field(default=None)
+
     shipments: list[Shipment] = Relationship(
         back_populates="seller",
         sa_relationship_kwargs={"lazy": "selectin"},
@@ -107,9 +149,10 @@ class DeliveryPartner(User, table=True):
         return [
             shipment
             for shipment in self.shipments
-            if shipment.status == ShipmentStatus.delivered
+            if shipment.status != ShipmentStatus.delivered
+            or shipment.status != ShipmentStatus.cancelled
         ]
 
     @property
-    def current_handeling_capacity(self):
+    def current_handling_capacity(self):
         return self.max_handling_capacity - len(self.active_shipments)

@@ -35,7 +35,7 @@ async def submit_shipment(
 ### Update fields of a shipment
 @router.patch("/", response_model=ShipmentRead)
 async def update_shipment(
-    id: int,
+    id: UUID,
     shipment_update: ShipmentUpdate,
     partner: DeliveryPartnerDep,
     service: ShipmentServiceDep,
@@ -47,15 +47,15 @@ async def update_shipment(
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="No data provided to update",
-        )
+        ) 
+    
+    
+    return await service.update(id, shipment_update, partner)
 
-    return await service.update(id, update)
 
-
-### Delete a shipment by id
-@router.delete("/")
-async def delete_shipment(id: int, service: ShipmentServiceDep) -> dict[str, str]:
+### Cancle a shipment by id
+@router.get("/cancle" , response_model = ShipmentRead)
+async def cancle_shipment(id: UUID, seller: SellerDep, service: ShipmentServiceDep) -> dict[str, str]:
     # Remove from database
-    await service.delete(id)
+    return await service.cancle(id, seller)
 
-    return {"detail": f"Shipment with id #{id} is deleted!"}

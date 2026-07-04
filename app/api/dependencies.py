@@ -1,12 +1,13 @@
 from typing import Annotated
 
-from fastapi import Depends, HTTPException, status
+from fastapi import BackgroundTasks, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.database.session import get_session
 from app.services.shipment import ShipmentService
 from app.services.seller import SellerService
 from app.core.security import oauth2_scheme_partner, oauth2_scheme_seller
+from app.services.shipment_event import ShipmentEventService
 from app.utils import decode_access_token
 from app.database.models import Seller, DeliveryPartner
 from app.database.redis import is_jti_blacklisted
@@ -59,9 +60,8 @@ async def get_current_partner(token_data: Annotated[dict, Depends(get_partner_ac
 
 
 # Shipment service dep
-def get_shipment_service(session: SessionDep):
-
-    return ShipmentService(session)
+def get_shipment_service(session: SessionDep, tasks: BackgroundTasks,):
+    return ShipmentService(session, DeliveryPartnerService(session), ShipmentEventService(session, tasks),)
 
 #Delivery partner service dep
 def get_delivery_partner_service(session: SessionDep):
@@ -69,7 +69,7 @@ def get_delivery_partner_service(session: SessionDep):
 
 # Seller service dep
 def get_seller_service(session: SessionDep):
-    return SellerService(session, DeliveryPartnerService(session),)
+    return SellerService(session,)
 
 #Seller dep
 SellerDep = Annotated[Seller, Depends(get_current_seller),]
@@ -78,7 +78,7 @@ SellerDep = Annotated[Seller, Depends(get_current_seller),]
 DeliveryPartnerDep = Annotated[DeliveryPartner, Depends(get_current_partner),]
 
 # Shipment service dep annotation
-ServiceDep = Annotated[
+ShipmentServiceDep = Annotated[
     ShipmentService,
     Depends(get_shipment_service),
 ]

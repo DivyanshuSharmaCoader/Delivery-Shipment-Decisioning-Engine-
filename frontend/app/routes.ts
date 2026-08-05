@@ -7,6 +7,9 @@ export default [
     route("/submit-shipment", "routes/seller/submit-shipment.tsx"),
     route("/update-shipment", "routes/partner/update-shipment.tsx"),
     route("/seller/login", "routes/seller/login.tsx"),
+    route("/seller/signup", "routes/seller/signup.tsx"),
     route("/seller/forgot-password", "routes/seller/forgot-password.tsx"),
     route("/partner/login", "routes/partner/login.tsx"),
+    route("/partner/signup", "routes/partner/signup.tsx"),
+    route("/partner/forgot-password", "routes/partner/forgot-password.tsx"),
 ] satisfies RouteConfig;

@@ -39,9 +39,11 @@ class ShipmentService(BaseService):
         partner = await self.partner_service.assign_shipment(new_shipment,)
         new_shipment.delivery_partner_id = partner.id
         shipment = await self._add(new_shipment)
+        # Use seller zip_code if available, otherwise fall back to shipment destination
+        pickup_location = seller.zip_code if seller.zip_code else shipment_create.destination
         event = await self.event_service.add(
             shipment = shipment,
-            location = seller.zip_code,
+            location = pickup_location,
             status = ShipmentStatus.placed,
             discription = f"assigned to {partner.name}"
         )
@@ -108,14 +110,22 @@ class ShipmentService(BaseService):
         shipment = await self.get(id)
         if shipment.seller_id != seller.id:
             raise ClientNotAuthorized()
-        
+
+        # Use seller's zip_code as the cancel-event location (parcel returns to origin)
+        pickup_location = shipment.seller.zip_code if shipment.seller and shipment.seller.zip_code else shipment.destination
+
+        # Update delivery destination to seller's location on cancellation
+        shipment.destination = pickup_location
+
         event = await self.event_service.add(
            shipment = shipment,
-           status = ShipmentStatus.cancelled
+           status = ShipmentStatus.cancelled,
+           location = pickup_location,
+           discription = f"cancelled by seller — return to {pickup_location}",
            )
-        
+
         shipment.timeline.append(event)
-        return shipment
+        return await self._update(shipment)
     
 
 

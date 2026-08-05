@@ -1,21 +1,29 @@
-# Python
+
 __pycache__/
 *.py[cod]
 *.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
 
-# Virtual environments
 venv/
 .venv/
 env/
-
-# Environment variables
 .env
+.env.*
+!.env.example
 
-# VS Code
 .vscode/
+.idea/
 
-# macOS
 .DS_Store
 
-# SQLite
+*.log
+file.log
 *.db
+
+docker-compose.override.yml
+
+frontend/node_modules/

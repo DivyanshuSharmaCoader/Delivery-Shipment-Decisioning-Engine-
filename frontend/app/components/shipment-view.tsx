@@ -1,4 +1,4 @@
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Edit3, Package, PackageX } from "lucide-react";
 import { useContext } from "react";
 import { useNavigate } from "react-router";
@@ -14,13 +14,36 @@ import {
     TableRow,
 } from "~/components/ui/table";
 import { AuthContext } from "~/contexts/AuthContext";
+import api from "~/lib/api";
 import type { Shipment } from "~/lib/client";
+import { ShipmentStatus } from "~/lib/client";
+import { toast } from "sonner";
 
 
-export default function ShipmentView({ shipment }: { shipment: Shipment }) {
+export default function ShipmentView({ shipment, onClose }: { shipment: Shipment, onClose?: () => void }) {
     const { user } = useContext(AuthContext)
     const queryClient = useQueryClient()
     const navigate = useNavigate()
+
+    const cancelMutation = useMutation({
+        mutationFn: () => api.shipment.cancelShipment({ id: shipment.id }),
+        onSuccess: () => {
+            toast.success("Shipment cancelled successfully")
+            queryClient.invalidateQueries({ queryKey: ["shipments"] })
+            queryClient.invalidateQueries({ queryKey: [shipment.id] })
+            onClose?.()
+        },
+        onError: () => {
+            toast.error("Failed to cancel shipment. It may already be in transit or delivered.")
+        },
+    })
+
+    const latestStatus = shipment.timeline[shipment.timeline.length - 1]?.status
+    const isCancellable = latestStatus !== ShipmentStatus.Cancelled &&
+        latestStatus !== ShipmentStatus.Delivered &&
+        latestStatus !== ShipmentStatus.InTransit &&
+        latestStatus !== ShipmentStatus.OutForDelivery
+
 
     const details = [
         {
@@ -30,6 +53,10 @@ export default function ShipmentView({ shipment }: { shipment: Shipment }) {
         {
             "title": "Weight",
             "description": `${shipment.weight} kg`,
+        },
+        {
+            "title": "Pickup Location",
+            "description": shipment.pickup_location || "N/A",
         },
         {
             "title": "Destination",
@@ -43,8 +70,12 @@ export default function ShipmentView({ shipment }: { shipment: Shipment }) {
 
     return (
         <div className="flex flex-col gap-4 w-full max-w-[640px] relative">
-            <div className="w-[80px] h-[80px] bg-gray-200 rounded-xl flex items-center justify-center">
-                <Package size={40} />
+            <div className="w-[80px] h-[80px] bg-gray-200 rounded-xl flex items-center justify-center overflow-hidden border">
+                {shipment.qr_code_url ? (
+                    <img src={shipment.qr_code_url} alt="QR Code" className="w-full h-full object-contain" />
+                ) : (
+                    <Package size={40} />
+                )}
             </div>
             {
                 shipment.tags.length !== 0 &&
@@ -88,9 +119,16 @@ export default function ShipmentView({ shipment }: { shipment: Shipment }) {
             <div className="flex gap-4 justify-end">
                 {
                     user === "seller" &&
-                    <Button variant="outline">
+                    <Button
+                        variant="outline"
+                        disabled={!isCancellable || cancelMutation.isPending}
+                        onClick={() => {
+                            if (!window.confirm("Are you sure you want to cancel this shipment?")) return
+                            cancelMutation.mutate()
+                        }}
+                    >
                         <PackageX />
-                        Cancel Shipment
+                        {cancelMutation.isPending ? "Cancelling..." : isCancellable ? "Cancel Shipment" : "Cannot Cancel"}
                     </Button>
                 }
                 {

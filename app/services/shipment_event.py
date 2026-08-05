@@ -22,8 +22,8 @@ class ShipmentEventService(BaseService):
 ) -> ShipmentEvent:
 
         if len(shipment.timeline) == 0:
-            location = shipment.destination
-            status = ShipmentStatus.placed
+            location = location if location is not None else shipment.destination
+            status = status if status else ShipmentStatus.placed
 
         elif not location or not status:
             last_event = await self.get_latest_event(shipment)
@@ -79,10 +79,11 @@ class ShipmentEventService(BaseService):
              case ShipmentStatus.placed:
                     subject="Your Order is shipped"
                     context["seller"] = shipment.seller.name
-                    context["partner"] = shipment.delivery_partner.name
-                    context["id"] = shipment.id
+                    context["partner"] = shipment.delivery_partner.name if shipment.delivery_partner else "N/A"
+                    context["id"] = str(shipment.id)
                     template_name = "mail_placed.html"
-                
+
+
 
              case ShipmentStatus.out_for_delivery:
                     subject="Your Order is arriving soon"

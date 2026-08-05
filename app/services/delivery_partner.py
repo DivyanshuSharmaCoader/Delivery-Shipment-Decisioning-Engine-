@@ -21,7 +21,7 @@ class DeliveryPartnerService(UserService):
             partner.serviceable_locations.append(
                 location
                 if location
-                else Location(zip_code)
+                else Location(zip_code=zip_code)
             )
         return await self._update(partner)
 
@@ -58,7 +58,16 @@ class DeliveryPartnerService(UserService):
 
         print("Partners =", eligible_partners)
 
+        # Sort by current_handling_capacity descending so the least-loaded
+        # partner is picked first (load-balancing).
+        eligible_partners = sorted(
+            eligible_partners,
+            key=lambda p: p.current_handling_capacity,
+            reverse=True,
+        )
+
         for partner in eligible_partners:
+            print(f"  {partner.name}: capacity={partner.current_handling_capacity}")
             if partner.current_handling_capacity > 0:
                 partner.shipments.append(shipment)
                 return partner

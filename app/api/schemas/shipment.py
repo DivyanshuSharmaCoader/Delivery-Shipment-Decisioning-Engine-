@@ -1,5 +1,5 @@
 from datetime import datetime
-from pydantic import BaseModel, EmailStr, Field
+from pydantic import BaseModel, EmailStr, Field, model_validator
 from uuid import UUID
 from app.database.models import ShipmentEvent, ShipmentStatus, Seller, Tag, TagName
 
@@ -15,13 +15,39 @@ class BaseShipment(BaseModel):
 
 class TagRead(BaseModel):
     name: TagName
-    instruction: str 
+    instructions: str
+
 
 class ShipmentRead(BaseShipment):
     id: UUID
     timeline: list[ShipmentEvent]
     estimated_delivery: datetime
     tags: list[Tag]
+    qr_code_url: str | None = None
+    pickup_location: int | None = None   # seller's zip_code — where partner picks up from
+
+    @model_validator(mode="before")
+    @classmethod
+    def populate_pickup_location(cls, data):
+        """Populate pickup_location from the related Seller model if not set."""
+        if isinstance(data, dict):
+            seller = data.get("seller")
+            if seller:
+                zip_code = getattr(seller, "zip_code", None) or (seller.get("zip_code") if isinstance(seller, dict) else None)
+                if zip_code:
+                    data["pickup_location"] = zip_code
+        else:
+            seller = getattr(data, "seller", None)
+            if seller:
+                zip_code = getattr(seller, "zip_code", None)
+                if zip_code:
+                    try:
+                        data.pickup_location = zip_code
+                    except AttributeError:
+                        if hasattr(data, "__dict__"):
+                            data.__dict__["pickup_location"] = zip_code
+        return data
+
 
 
 class ShipmentCreate(BaseShipment):

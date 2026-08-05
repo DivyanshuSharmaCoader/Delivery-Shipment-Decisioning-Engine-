@@ -1,6 +1,6 @@
 
 import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { toast } from "sonner"
 
 import { ScanQrCode } from "lucide-react"
@@ -49,6 +49,12 @@ export function UpdateShipmentForm({
     const queryClient = useQueryClient()
 
     const [status, setStatus] = useState<ShipmentStatus>()
+
+    useEffect(() => {
+        if (shipment) {
+            setStatus(getLatestStatus(shipment) as ShipmentStatus)
+        }
+    }, [shipment])
 
     const shipments = useMutation({
         mutationFn: async ({
@@ -109,6 +115,7 @@ export function UpdateShipmentForm({
                         <div className="flex w-full items-center space-x-2">
                             <Input
                                 value={shipment?.id ?? undefined}
+                                onChange={(e) => onScan(e.target.value)}
                                 type="text"
                                 name="id"
                                 required

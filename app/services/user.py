@@ -2,7 +2,7 @@ from datetime import timedelta
 from uuid import UUID
 
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.core.exceptions import BadCredentials, ClientNotVerified, InvalidToken, BadPassword
+from app.core.exceptions import BadCredentials, ClientNotVerified, InvalidToken, BadPassword, UserAlreadyExists
 from app.database.models import User
 from app.worker.tasks import send_email_with_template
 from .base import BaseService
@@ -20,10 +20,19 @@ class UserService(BaseService):
         self.session = session
 
     async def _add_user(self, data: dict, router_prefix: str):
+        existing_user = await self._get_by_email(data["email"])
+        if existing_user:
+            raise UserAlreadyExists()
+
+        user_data = data.copy()
+        raw_password = user_data.pop("password", None)
+        if not raw_password:
+            raise BadPassword()
+
         try:
             user = self.model(
-                **data,
-                password_hash=password_context.hash(data["password"]),
+                **user_data,
+                password_hash=password_context.hash(raw_password),
             )
         except PasswordValueError:
             raise BadPassword()
@@ -33,16 +42,18 @@ class UserService(BaseService):
             "email": user.email,
             "id": str(user.id)
         })
+        prefix = router_prefix if router_prefix.startswith("/") else f"/{router_prefix}"
         send_email_with_template.delay(
             recipients = [user.email],
             subject="verify your account with FastShip",
             context={
                 "username": user.name,
-                "verification_url": f"{app_settings.APP_DOMAIN}/{router_prefix}/verify?token={token}"
+                "verification_url": f"http://{app_settings.APP_DOMAIN}{prefix}/verify?token={token}"
             },
             template_name="mail_email_verify.html",
         )
         return user
+
     
     async def verify_email(self, token: str):
         token_data = decode_url_safe_token(token)
@@ -76,6 +87,9 @@ class UserService(BaseService):
 
     async def send_password_reset_link(self, email, router_prefix):
         user = await self._get_by_email(email)
+        if not user:
+            # Silently return — don't reveal whether an account exists
+            return
         token = generate_url_safe_token({"id": str(user.id)}, salt="password_reset")
 
         send_email_with_template.delay(

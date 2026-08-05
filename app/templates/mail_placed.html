@@ -6,5 +6,8 @@
     </p>
     <a href="http://localhost:8000/shipment/track?id={{ id }}" style="display: block;">Track Now</a>
     <br>
+    <p>Here is your shipment QR code. You can print this and attach it to the parcel for scanning:</p>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ id }}" alt="Shipment QR Code" style="display: block; margin-top: 10px; border: 1px solid #ccc; padding: 5px;" />
+    <br>
     <p>Powered by FastShip</p>
 </body>

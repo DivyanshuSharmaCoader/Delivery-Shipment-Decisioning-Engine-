@@ -82,11 +82,12 @@ export function SubmitShipmentForm({
             <Input
               id="destination"
               name="destination"
-              type="destination"
+              type="number"
               placeholder="11001"
               required
             />
           </div>
+
           <div className="grid gap-2">
             <Label htmlFor="client-contact-email">Client Email</Label>
             <Input

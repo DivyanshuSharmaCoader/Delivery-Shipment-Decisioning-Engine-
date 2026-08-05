@@ -51,12 +51,26 @@ function AuthProvider({ children }: { children: React.ReactNode }) {
                 navigate("/dashboard")
             }
         } catch (error) {
-            toast.error("Login failed. Please check your credentials.")
+            const axiosErr = error as import("axios").AxiosError<{ detail?: string }>
+            const status = axiosErr.response?.status
+            const detail = axiosErr.response?.data?.detail
+
+            if (status === 403) {
+                toast.error(detail || "Your account is not verified. Please check your email and verify your account before logging in.")
+            } else if (status === 401) {
+                toast.error(detail || "Invalid email or password.")
+            } else {
+                toast.error("Login failed. Please try again later.")
+            }
         }
     }
 
     function logout() {
-        api.seller.logoutSeller()
+        if (user === "partner") {
+            api.partner.logoutDeliveryPartner()
+        } else {
+            api.seller.logoutSeller()
+        }
 
         setToken(null)
         setUser(undefined)

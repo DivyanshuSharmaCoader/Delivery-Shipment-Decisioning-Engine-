@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: "#Divyanshu_108"
+      POSTGRES_DB: fastship
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  api:
+    build: .
+    command: fastapi run --port 8000
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    depends_on:
+      - postgres
+      - redis
+
+  worker:
+    build: .
+    command: celery -A app.worker.tasks.app worker --loglevel=info
+    env_file:
+      - .env
+    depends_on:
+      - redis
+
+volumes:
+  postgres_data:

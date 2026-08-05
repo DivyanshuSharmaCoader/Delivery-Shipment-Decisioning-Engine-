@@ -62,6 +62,8 @@ export interface DeliveryPartnerCreate {
    * @format email
    */
   email: string;
+  /** Serviceable Zip Codes */
+  serviceable_zip_codes: number[];
   /** Max Handling Capacity */
   max_handling_capacity: number;
   /** Password */
@@ -205,6 +207,13 @@ export interface Shipment {
   estimated_delivery: string;
   /** Tags */
   tags: TagRead[];
+  /** QR Code URL */
+  qr_code_url?: string;
+  /**
+   * Pickup Location
+   * Seller's zip code — where the delivery partner needs to collect the parcel from
+   */
+  pickup_location?: number | null;
 }
 
 /** ShipmentStatus */
@@ -246,9 +255,10 @@ export enum TagName {
 /** TagRead */
 export interface TagRead {
   name: TagName;
-  /** Instruction */
-  instruction: string;
+  /** Instructions */
+  instructions: string;
 }
+
 
 /** TokenData */
 export interface TokenData {

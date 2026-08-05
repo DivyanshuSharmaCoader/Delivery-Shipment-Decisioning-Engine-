@@ -147,10 +147,12 @@ async def remove_tag_from_shipment(
     return await service.remove_tag(id, tag_name)
 
 ### Cancle a shipment by id
-@router.get("/cancle" , response_model = ShipmentRead)
+@router.get("/cancle", response_model = ShipmentRead)
+@router.get("/cancel", response_model = ShipmentRead)
 async def cancle_shipment(id: UUID, seller: SellerDep, service: ShipmentServiceDep) -> dict[str, str]:
     # Remove from database
     return await service.cancle(id, seller)
+
 
 
 #Submit a Review for a Shipment

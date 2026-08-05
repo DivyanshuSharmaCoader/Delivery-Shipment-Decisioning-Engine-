@@ -102,9 +102,10 @@ class Shipment(SQLModel, table = True):
         sa_relationship_kwargs={"lazy": "selectin"},
         )
 
-    delivery_partner_id: UUID = Field(
-    foreign_key="delivery_partner.id",
-)
+    delivery_partner_id: UUID | None = Field(
+        default=None,
+        foreign_key="delivery_partner.id",
+    )
     delivery_partner: "DeliveryPartner" = Relationship(
         back_populates="shipments",
         sa_relationship_kwargs={"lazy": "selectin"},
@@ -124,6 +125,14 @@ class Shipment(SQLModel, table = True):
     @property
     def status(self):
         return self.timeline[-1].status if len(self.timeline) > 0 else None
+
+    @property
+    def qr_code_url(self) -> str:
+        return f"https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={self.id}"
+
+    @property
+    def pickup_location(self) -> int | None:
+        return self.seller.zip_code if self.seller else None
 
     
 
@@ -151,6 +160,13 @@ class ShipmentEvent(SQLModel, table=True):
         back_populates= "timeline",
         sa_relationship_kwargs={"lazy": "selectin"},
     )
+
+    @property
+    def description(self) -> str | None:
+        """Alias for discription (backwards-compatible field name for API responses)"""
+        return self.discription
+
+
 
 
 class User(SQLModel):
@@ -236,12 +252,17 @@ class DeliveryPartner(User, table=True):
             shipment
             for shipment in self.shipments
             if shipment.status != ShipmentStatus.delivered
-            or shipment.status != ShipmentStatus.cancelled
+            and shipment.status != ShipmentStatus.cancelled
         ]
 
     @property
     def current_handling_capacity(self):
         return self.max_handling_capacity - len(self.active_shipments)
+
+    @property
+    def serviceable_zip_codes(self) -> list[int]:
+        return [loc.zip_code for loc in self.serviceable_locations]
+
 
 
 class Location(SQLModel, table=True):

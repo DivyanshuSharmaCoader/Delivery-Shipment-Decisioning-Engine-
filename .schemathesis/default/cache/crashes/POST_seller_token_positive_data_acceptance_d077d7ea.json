@@ -1,0 +1,83 @@
+{
+  "operation": "POST /seller/token",
+  "method": "POST",
+  "path_template": "/seller/token",
+  "fingerprint": "d077d7ea",
+  "case_id": "st4R1F",
+  "code_sample": "curl -X POST -H 'Content-Type: application/x-www-form-urlencoded' -d 'password=&username=' http://127.0.0.1:8000/seller/token",
+  "sequence": [
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:8000/seller/token",
+      "url_template": "http://127.0.0.1:8000/seller/token",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "st4R1F",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": "19"
+      },
+      "response": {
+        "status_code": 422,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:44 GMT",
+          "server": "uvicorn",
+          "content-length": "174",
+          "content-type": "application/json"
+        },
+        "body": "{\"detail\":[{\"type\":\"missing\",\"loc\":[\"body\",\"username\"],\"msg\":\"Field required\",\"input\":null},{\"type\":\"missing\",\"loc\":[\"body\",\"password\"],\"msg\":\"Field required\",\"input\":null}]}"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "positive_data_acceptance",
+          "status": "failure",
+          "message": "API rejected schema-compliant request\n\nValid data should have been accepted\nExpected: 2xx, 401, 403, 404, 409, 5xx"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 1.3167002180125564e-05,
+          "mode": "positive"
+        },
+        "components": {
+          "BODY": "positive"
+        },
+        "phase": {
+          "name": "coverage",
+          "data": {
+            "type": "CoveragePhaseData",
+            "description": "Object with valid 'client_secret' value: Value null value",
+            "location": null,
+            "parameter": "application/x-www-form-urlencoded",
+            "parameter_location": "BODY",
+            "scenario": "valid_object"
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {}
+      },
+      "path": "/seller/token",
+      "path_parameters": {},
+      "query": {},
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "json",
+        "value": {
+          "password": "[Filtered]",
+          "username": "",
+          "client_secret": "[Filtered]"
+        }
+      },
+      "media_type": "application/x-www-form-urlencoded",
+      "parent_index": null
+    }
+  ]
+}

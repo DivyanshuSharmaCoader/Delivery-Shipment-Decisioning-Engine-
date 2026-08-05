@@ -1,12 +1,15 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
+
+from app.core.exceptions import NothingToUpdate
 from ..schemas.delivery_partner import DeliveryPartnerCreate
 from ..dependencies import SellerServiceDep, SessionDep, get_partner_access_token, DeliveryPartnerDep, DeliveryPartnerServiceDep
 from ..schemas.delivery_partner import DeliveryPartnerRead, DeliveryPartnerUpdate
 from fastapi.security import OAuth2PasswordRequestForm
 from typing import Annotated
 from app.database.redis import add_jti_to_blacklist
+from app.api.tag import APITag
 
-router = APIRouter(prefix="/partner", tags=["Delivery Partner"])
+router = APIRouter(prefix="/partner", tags=[APITag.PARTNER])
 
 #Register a delivery partner
 @router.post("/signup", response_model= DeliveryPartnerRead)
@@ -29,6 +32,12 @@ async def login_delivery_partner(
         "type": "jwt",
     }
 
+#Verify seller Email
+@router.get("/verify")
+async def verify_delivery_partner_email(token: str, service: DeliveryPartnerServiceDep,):
+    await service.verify_email(token)
+    return {"detail": "Account Verified"}
+
 #Update Delivery Partner
 @router.post("/", response_model=DeliveryPartnerRead)
 async def update_delivery_partner(
@@ -40,10 +49,8 @@ async def update_delivery_partner(
     update = partner_update.model_dump(exclude_none=True)
 
     if not update:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="No data provided to update",
-        )
+        raise NothingToUpdate()
+    
     return await service.update(
         partner.sqlmodel_update(update)
     ) 

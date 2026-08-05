@@ -1,0 +1,90 @@
+{
+  "operation": "POST /shipment/",
+  "method": "POST",
+  "path_template": "/shipment/",
+  "fingerprint": "dd49e39f",
+  "case_id": "Ao912C",
+  "code_sample": "curl -X POST -H 'Content-Type: application/json' -d $'\ufffd\\x1e\\x08c!\ufffd\ufffds\ufffd+' http://127.0.0.1:8000/shipment/",
+  "sequence": [
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:8000/shipment/",
+      "url_template": "http://127.0.0.1:8000/shipment/",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "Ao912C",
+        "Content-Type": "application/json",
+        "Content-Length": "10"
+      },
+      "response": {
+        "status_code": 400,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:47 GMT",
+          "server": "uvicorn",
+          "content-length": "48",
+          "content-type": "application/json"
+        },
+        "body": "{\"detail\":\"There was an error parsing the body\"}"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "status_code_conformance",
+          "status": "failure",
+          "message": "Undocumented HTTP status code\n\nReceived: 400\nDocumented: 201, 406, 422"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 0.0019407079962547868,
+          "mode": "negative"
+        },
+        "components": {
+          "BODY": "negative"
+        },
+        "phase": {
+          "name": "stateful",
+          "data": {
+            "type": "StatefulPhaseData",
+            "description": "Invalid syntax: random bytes",
+            "location": null,
+            "parameter": null,
+            "parameter_location": "BODY",
+            "mutations": [
+              {
+                "path": [],
+                "schema_pointer": "",
+                "channel": "schema",
+                "operator": "syntax_fuzzing",
+                "keywords": [],
+                "parameter": null,
+                "original_value": null,
+                "new_value": null
+              }
+            ]
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {}
+      },
+      "path": "/shipment/",
+      "path_parameters": {},
+      "query": {},
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "base64",
+        "value": "2x4IYyGUx3PAKw=="
+      },
+      "media_type": "application/json",
+      "parent_index": null
+    }
+  ]
+}

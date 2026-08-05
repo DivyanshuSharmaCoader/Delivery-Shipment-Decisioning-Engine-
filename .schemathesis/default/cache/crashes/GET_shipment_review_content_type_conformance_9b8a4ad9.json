@@ -1,0 +1,82 @@
+{
+  "operation": "GET /shipment/review",
+  "method": "GET",
+  "path_template": "/shipment/review",
+  "fingerprint": "9b8a4ad9",
+  "case_id": "90DsWb",
+  "code_sample": "curl -X GET 'http://127.0.0.1:8000/shipment/review?token=%5BFiltered%5D'",
+  "sequence": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8000/shipment/review?token=%5BFiltered%5D",
+      "url_template": "http://127.0.0.1:8000/shipment/review",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "90DsWb"
+      },
+      "response": {
+        "status_code": 200,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:44 GMT",
+          "server": "uvicorn",
+          "content-length": "4741",
+          "content-type": "text/html; charset=utf-8"
+        },
+        "body": "<!DOCTYPE html>\n<html lang=\"en\">\n<head>\n    <meta charset=\"UTF-8\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n    <title>Shipment Review - FastShip</title>\n    <style>\n        @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Sedgwick+Ave+Display&display=swap');\n\n        * {\n            padding: 0;\n            margin: 0;\n            box-sizing: border-box;\n        }\n\n        body {\n            background-color: #f2f2f2;\n            font-family: \"Manrope\";\n        }\n\n        .row {\n            display: flex;\n            margin-inline: auto;\n            justify-content: center;\n        }\n\n        .container {\n            --padding: 30px;\n            position: relative;\n            width: 90vw;\n            max-width: 560px;\n            margin: 40px auto;\n            padding: var(--padding);\n            border-radius: 20px;\n            border: 1px solid #ccc;\n            background-color: white;\n            \n            display: flex;\n            flex-direction: column;\n            align-items: center;\n            gap: 20px;\n        }\n\n        p {\n            color: #999;\n            text-align: center;\n        }\n        \n        form {\n            width: 100%;\n            font-family: \"Manrope\";\n\n            display: flex;\n            flex-direction: column;\n            gap: 10px;\n        }\n\n        /* When no radio input is checked */\n        .rating:has(:invalid) {\n            width: fit-content;\n            outline: 2px dotted red;\n            outline-offset: 5px;\n            border-radius: .5em;\n        }\n\n        textarea  {\n            width: 100%;\n            padding: .5em .75em;\n            font-size: 14px;\n            border-radius: .45em;\n\n            background-color: #f2f2f2;\n            border: 1px solid #ccc;\n        }\n\n        ::placeholder {\n            color: #ccc;\n        }\n\n        /* Remove default radio input dots */\n        input[type=radio] {\n            display: none;\n        }\n\n        label {\n            padding: 1em 1.5em;\n            opacity: .2;\n            transition: opacity 200ms, transform 200ms;\n        }\n\n        label:hover {\n            z-index: 1;\n            opacity: 1;\n            transform: scale(1.1);\n        }\n\n        /* Set color of each radio input label based on index */\n        label:nth-of-type(1) {\n            background-color: hsl(0, 100%, 50%);\n        }\n        label:nth-of-type(2) {\n            background-color: hsl(25, 100%, 50%);\n        }\n        label:nth-of-type(3) {\n            background-color: hsl(50, 100%, 50%);\n        }\n        label:nth-of-type(4) {\n            background-color: hsl(75, 100%, 50%);\n        }\n        label:nth-of-type(5) {\n            background-color: hsl(100, 100%, 50%);\n        }\n\n        label:first-of-type {\n            border-radius: .5em;\n            border-top-right-radius: 0;\n            border-bottom-right-radius: 0;\n        }\n\n        label:last-of-type {\n            border-radius: .5em;\n            border-top-left-radius: 0;\n            border-bottom-left-radius: 0;\n        }\n\n        /* Select the adjacent label to a selected radio input */\n        input:checked + label {\n            z-index: 1;\n            opacity: 1;\n        }\n\n        input[type=submit] {\n            padding: .5em .75em;\n            font-size: 14px;\n            border-radius: .45em;\n            color: white;\n            background-color: black;\n        }\n        \n    </style>\n</head>\n<body>\n    <div class=\"container\">\n        <h1>Hey!</h1>\n        <p>We'd love your candid feedback if you have a moment. Just click one of the ratings below, and you're done!</p>\n\n        <form method=\"post\" action=\"http://localhost:8000/shipment/review?token=\">\n            <p>How would you rate our service?*</p>\n\n            <div class=\"row rating\">\n                <input required type=\"radio\" name=\"rating\" id=\"1\" value=\"1\">\n                <label for=\"1\">1</label>\n\n                <input required type=\"radio\" name=\"rating\" id=\"2\" value=\"2\">\n                <label for=\"2\">2</label>\n\n                <input required type=\"radio\" name=\"rating\" id=\"3\" value=\"3\">\n                <label for=\"3\">3</label>\n\n                <input required type=\"radio\" name=\"rating\" id=\"4\" value=\"4\">\n                <label for=\"4\">4</label>\n                \n                <input required type=\"radio\" name=\"rating\" id=\"5\" value=\"5\" checked>\n                <label for=\"5\">5</label>\n            </div>\n\n            <p>Is there anything else you want to add?</p>\n            <textarea name=\"comment\" rows=\"3\" placeholder=\"Describe your experience...\"></textarea>\n            \n            <input type=\"submit\" value=\"Submit Review\">\n        \n        </form>\n    </div>\n</body>\n</html>"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "content_type_conformance",
+          "status": "failure",
+          "message": "Undocumented Content-Type\n\nReceived: text/html; charset=utf-8\nDocumented: application/json"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 8.499999967170879e-05,
+          "mode": "positive"
+        },
+        "components": {
+          "QUERY": "positive"
+        },
+        "phase": {
+          "name": "coverage",
+          "data": {
+            "type": "CoveragePhaseData",
+            "description": "Default positive test case",
+            "location": null,
+            "parameter": null,
+            "parameter_location": null,
+            "scenario": "default_positive_test"
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {
+          "QUERY": {
+            "token": ""
+          }
+        }
+      },
+      "path": "/shipment/review",
+      "path_parameters": {},
+      "query": {
+        "token": "[Filtered]"
+      },
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "none"
+      },
+      "media_type": null,
+      "parent_index": null
+    }
+  ]
+}

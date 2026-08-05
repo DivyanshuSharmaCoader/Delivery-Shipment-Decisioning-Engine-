@@ -1,13 +1,17 @@
 from datetime import datetime, timedelta
 from uuid import UUID
-from fastapi import HTTPException, status
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.api.schemas.shipment import ShipmentCreate, ShipmentUpdate
-from app.database.models import DeliveryPartner, Shipment, ShipmentStatus, Seller
+from app.api.schemas.shipment import ShipmentCreate, ShipmentReview, ShipmentUpdate
+from app.core.exceptions import ClientNotAuthorized, EntityNotFound, InvalidToken
+from app.database.models import DeliveryPartner, Review, Seller, Shipment, ShipmentStatus, TagName
+from app.database.redis import get_shipment_verification_code
 from app.services.shipment_event import ShipmentEventService
-from .delivery_partner import DeliveryPartnerService
+from app.utils import decode_url_safe_token
+
 from .base import BaseService
+from .delivery_partner import DeliveryPartnerService
 
 
 class ShipmentService(BaseService):
@@ -18,7 +22,10 @@ class ShipmentService(BaseService):
 
     # Get a shipment by id 
     async def get(self, id: UUID) -> Shipment | None:
-        return await self._get(id)
+        shipment = await self._get(id)
+        if not shipment:
+                raise EntityNotFound()
+        return shipment
 
     # Add a new shipment
     async def add(self, shipment_create: ShipmentCreate, seller: Seller) -> Shipment:
@@ -26,7 +33,6 @@ class ShipmentService(BaseService):
         print("Destination:", shipment_create.destination)
         new_shipment = Shipment(
             **shipment_create.model_dump(),
-            status=ShipmentStatus.placed,
             estimated_delivery=datetime.now() + timedelta(days=3),
             seller_id=seller.id,
         )
@@ -47,11 +53,22 @@ class ShipmentService(BaseService):
     async def update(self, id: UUID, shipment_update: ShipmentUpdate, partner: DeliveryPartner) -> Shipment:
         shipment = await self.get(id)
         if shipment.delivery_partner_id != partner.id:
-            raise HTTPException(
-                status_code= status.HTTP_401_UNAUTHORIZED,
-                detail= "Not authorized", 
+            raise ClientNotAuthorized()
+
+        if shipment_update.status == ShipmentStatus.delivered:
+            code = await get_shipment_verification_code(shipment.id)
+
+            print("Redis:", code)
+            print("Request:", shipment_update.verification_code)
+
+
+            if code != shipment_update.verification_code:
+                raise ClientNotAuthorized()
+
+        update = shipment_update.model_dump(
+            exclude_none = True,
+            exclude = ["verification_code"],
         )
-        update = shipment_update.model_dump(exclude_none = True)
         if shipment_update.estimated_delivery:
             shipment.estimated_delivery = shipment_update.estimated_delivery
         if len(update) > 1 or not shipment_update.estimated_delivery:
@@ -61,14 +78,37 @@ class ShipmentService(BaseService):
             )
         return await self._update(shipment)
 
+    async def add_tag(self, id: UUID, tag_name: TagName):
+        shipment = await self.get(id)
+        shipment.tags.append(await tag_name.tag(self.session))
+        return await self._update(shipment)
+
+    async def remove_tag(self, id: UUID, tag_name: TagName):
+            shipment = await self.get(id)
+            try:
+                shipment.tags.remove(await tag_name.tag(self.session))
+            except ValueError:
+                raise EntityNotFound()
+            return await self._update(shipment)
+
+    async def rate(self, token: str, review: ShipmentReview):
+        token_data = decode_url_safe_token(token)
+        if not token_data:
+            raise InvalidToken()
+        shipment = await self.get(UUID(token_data["id"]))
+        new_review = Review(
+            **review.model_dump(),
+            shipment_id = shipment.id,
+        )
+        self.session.add(new_review)
+        await self.session.commit()
+
     async def cancle(self, id: UUID, seller: Seller) -> Shipment:
         #Validate the seller
         shipment = await self.get(id)
         if shipment.seller_id != seller.id:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Not Authorised",
-            )
+            raise ClientNotAuthorized()
+        
         event = await self.event_service.add(
            shipment = shipment,
            status = ShipmentStatus.cancelled

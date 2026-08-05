@@ -1,0 +1,75 @@
+{
+  "operation": "GET /seller/logout",
+  "method": "GET",
+  "path_template": "/seller/logout",
+  "fingerprint": "99ea6c85",
+  "case_id": "kyhjvC",
+  "code_sample": "curl -X GET http://127.0.0.1:8000/seller/logout",
+  "sequence": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8000/seller/logout",
+      "url_template": "http://127.0.0.1:8000/seller/logout",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "kyhjvC"
+      },
+      "response": {
+        "status_code": 401,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:44 GMT",
+          "server": "uvicorn",
+          "www-authenticate": "[Filtered]",
+          "content-length": "30",
+          "content-type": "application/json"
+        },
+        "body": "{\"detail\":\"Not authenticated\"}"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "status_code_conformance",
+          "status": "failure",
+          "message": "Undocumented HTTP status code\n\nReceived: 401\nDocumented: 200"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 2.5417000870220363e-05,
+          "mode": "positive"
+        },
+        "components": {},
+        "phase": {
+          "name": "coverage",
+          "data": {
+            "type": "CoveragePhaseData",
+            "description": "Default positive test case",
+            "location": null,
+            "parameter": null,
+            "parameter_location": null,
+            "scenario": "default_positive_test"
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {}
+      },
+      "path": "/seller/logout",
+      "path_parameters": {},
+      "query": {},
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "none"
+      },
+      "media_type": null,
+      "parent_index": null
+    }
+  ]
+}

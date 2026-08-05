@@ -1,13 +1,17 @@
-from app.services import delivery_partner
-from app.services.notification import NotificationSerice
+from random import randint
+
+from app.config import app_settings
 from app.database.models import Shipment, ShipmentEvent, ShipmentStatus
+from app.database.redis import add_shipment_verification_code
+from app.services import delivery_partner
 from app.services.base import BaseService
+from app.utils import generate_url_safe_token
+from app.worker.tasks import send_email_with_template, send_sms
 
 
 class ShipmentEventService(BaseService):
-    def __init__(self, session, tasks):
+    def __init__(self, session):
         super().__init__(ShipmentEvent, session)
-        self.notification_service = NotificationSerice(tasks)
 
     async def add(
     self,
@@ -76,6 +80,7 @@ class ShipmentEventService(BaseService):
                     subject="Your Order is shipped"
                     context["seller"] = shipment.seller.name
                     context["partner"] = shipment.delivery_partner.name
+                    context["id"] = shipment.id
                     template_name = "mail_placed.html"
                 
 
@@ -83,22 +88,36 @@ class ShipmentEventService(BaseService):
                     subject="Your Order is arriving soon"
                     context["seller"] = shipment.seller.name
                     context["partner"] = shipment.delivery_partner.name
-                    context["shipment_id"] = shipment.id
+                    context["id"] = shipment.id
                     template_name="mail_out_for_delivery.html"
+
+                    code = randint(100_000,999_999)
+                    await add_shipment_verification_code(shipment.id, code) 
+
+                    if shipment.client_contact_phone:
+                        send_sms.delay(
+                            to = shipment.client_contact_phone,
+                            body = f"Your order is arriving soon! Share the {code} code with your"
+                            "delivery executive to recieve your package."
+                        )
+                    else:
+                        context["verification_code"] = code
 
              case ShipmentStatus.delivered:
                 subject="Your Order is delivered"
                 context["seller"] = shipment.seller.name
-                context["shipment_id"] = shipment.id
+                token = generate_url_safe_token({"id": str(shipment.id)})
+                context["review_url"] = f"http://{app_settings.APP_DOMAIN}/shipment/review?token={token}"
+                context["id"] = shipment.id
                 template_name="mail_delivered.html"
 
              case ShipmentStatus.cancelled:
                 subject="Your Order is cancelled"
                 context["seller"] = shipment.seller.name
-                context["shipment_id"] = shipment.id
+                context["id"] = shipment.id
                 template_name="mail_cancelled.html"
 
-        await self.notification_service.send_email_with_template(
+        send_email_with_template.delay(
             recipients=[shipment.client_contact_email],
             subject=subject,
             context=context,

@@ -1,0 +1,91 @@
+{
+  "operation": "GET /shipment/",
+  "method": "GET",
+  "path_template": "/shipment/",
+  "fingerprint": "cf409c6d",
+  "case_id": "R1P5wm",
+  "code_sample": "curl -X GET 'http://127.0.0.1:8000/shipment/?id=e4c7f6b3-8e1d-4a2b-8f3f-5c5b6d7e8f9a'",
+  "sequence": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8000/shipment/?id=e4c7f6b3-8e1d-4a2b-8f3f-5c5b6d7e8f9a",
+      "url_template": "http://127.0.0.1:8000/shipment/",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "R1P5wm"
+      },
+      "response": {
+        "status_code": 404,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:44 GMT",
+          "server": "uvicorn",
+          "content-length": "41",
+          "content-type": "application/json"
+        },
+        "body": "{\"detail\":\"Entity not found in database\"}"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "status_code_conformance",
+          "status": "failure",
+          "message": "Undocumented HTTP status code\n\nReceived: 404\nDocumented: 200, 422"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 0.00016895800217753276,
+          "mode": "positive"
+        },
+        "components": {
+          "QUERY": "positive"
+        },
+        "phase": {
+          "name": "coverage",
+          "data": {
+            "type": "CoveragePhaseData",
+            "description": "Default positive test case",
+            "location": null,
+            "parameter": null,
+            "parameter_location": null,
+            "scenario": "default_positive_test"
+          }
+        },
+        "pool_draws": [
+          {
+            "location": "query",
+            "parameter_name": "id",
+            "resource_name": "ShipmentRead",
+            "resource_field": "id",
+            "source_operation": "POST /shipment/",
+            "source_status": 201
+          }
+        ],
+        "pool_misses": [],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {
+          "QUERY": {
+            "id": "e4c7f6b3-8e1d-4a2b-8f3f-5c5b6d7e8f9a"
+          }
+        }
+      },
+      "path": "/shipment/",
+      "path_parameters": {},
+      "query": {
+        "id": "e4c7f6b3-8e1d-4a2b-8f3f-5c5b6d7e8f9a"
+      },
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "none"
+      },
+      "media_type": null,
+      "parent_index": null
+    }
+  ]
+}

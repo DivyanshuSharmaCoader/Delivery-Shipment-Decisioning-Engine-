@@ -1,0 +1,82 @@
+{
+  "operation": "GET /seller/verify",
+  "method": "GET",
+  "path_template": "/seller/verify",
+  "fingerprint": "186fc4a9",
+  "case_id": "vq2Xxl",
+  "code_sample": "curl -X GET 'http://127.0.0.1:8000/seller/verify?token=%5BFiltered%5D'",
+  "sequence": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8000/seller/verify?token=%5BFiltered%5D",
+      "url_template": "http://127.0.0.1:8000/seller/verify",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "vq2Xxl"
+      },
+      "response": {
+        "status_code": 401,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:44 GMT",
+          "server": "uvicorn",
+          "content-length": "47",
+          "content-type": "application/json"
+        },
+        "body": "{\"detail\":\"Access token is invalid or expired\"}"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "status_code_conformance",
+          "status": "failure",
+          "message": "Undocumented HTTP status code\n\nReceived: 401\nDocumented: 200, 422"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 8.737500320421532e-05,
+          "mode": "positive"
+        },
+        "components": {
+          "QUERY": "positive"
+        },
+        "phase": {
+          "name": "coverage",
+          "data": {
+            "type": "CoveragePhaseData",
+            "description": "Default positive test case",
+            "location": null,
+            "parameter": null,
+            "parameter_location": null,
+            "scenario": "default_positive_test"
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {
+          "QUERY": {
+            "token": ""
+          }
+        }
+      },
+      "path": "/seller/verify",
+      "path_parameters": {},
+      "query": {
+        "token": "[Filtered]"
+      },
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "none"
+      },
+      "media_type": null,
+      "parent_index": null
+    }
+  ]
+}

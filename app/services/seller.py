@@ -2,7 +2,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.schemas.seller import SellerCreate
 from app.database.models import Seller
 from sqlalchemy import select
-from fastapi import HTTPException, status
 import jwt
 from datetime import datetime, timedelta
 from app.config import security_settings
@@ -17,7 +16,7 @@ class SellerService(UserService):
 
     async def add(self, seller_create: SellerCreate) -> Seller:
         
-        return await self._add_user(seller_create.model_dump())
+        return await self._add_user(seller_create.model_dump(), "seller")
 
     async def token(self, email, password) -> str:
         return await self._generate_token(email, password)

@@ -1,0 +1,79 @@
+{
+  "operation": "GET /partner/verify",
+  "method": "GET",
+  "path_template": "/partner/verify",
+  "fingerprint": "8e9696a2",
+  "case_id": "G58ZfG",
+  "code_sample": "curl -X GET http://127.0.0.1:8000/partner/verify",
+  "sequence": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8000/partner/verify",
+      "url_template": "http://127.0.0.1:8000/partner/verify",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "G58ZfG"
+      },
+      "response": {
+        "status_code": 500,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:44 GMT",
+          "server": "uvicorn",
+          "x-error": "<module 'asyncio.exceptions' from '/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/exceptions.py'>",
+          "content-length": "37",
+          "content-type": "application/json"
+        },
+        "body": "{\"detail\":\"Something went wrong ...\"}"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "status_code_conformance",
+          "status": "failure",
+          "message": "Undocumented HTTP status code\n\nReceived: 500\nDocumented: 200, 422"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 7.374997949227691e-06,
+          "mode": "negative"
+        },
+        "components": {
+          "QUERY": "negative"
+        },
+        "phase": {
+          "name": "coverage",
+          "data": {
+            "type": "CoveragePhaseData",
+            "description": "Missing `token` at query",
+            "location": null,
+            "parameter": "token",
+            "parameter_location": "QUERY",
+            "scenario": "missing_parameter"
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {
+          "QUERY": {}
+        }
+      },
+      "path": "/partner/verify",
+      "path_parameters": {},
+      "query": {},
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "none"
+      },
+      "media_type": null,
+      "parent_index": null
+    }
+  ]
+}

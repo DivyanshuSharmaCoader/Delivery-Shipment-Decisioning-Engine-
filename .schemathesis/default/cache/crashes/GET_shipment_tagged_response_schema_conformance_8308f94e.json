@@ -1,0 +1,87 @@
+{
+  "operation": "GET /shipment/tagged",
+  "method": "GET",
+  "path_template": "/shipment/tagged",
+  "fingerprint": "8308f94e",
+  "case_id": "vfLrC1",
+  "code_sample": "curl -X GET 'http://127.0.0.1:8000/shipment/tagged?tag_name=international'",
+  "sequence": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8000/shipment/tagged?tag_name=international",
+      "url_template": "http://127.0.0.1:8000/shipment/tagged",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "vfLrC1"
+      },
+      "response": {
+        "status_code": 200,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:44 GMT",
+          "server": "uvicorn",
+          "content-length": "1678",
+          "content-type": "application/json"
+        },
+        "body": "[{\"content\":\"pen\",\"weight\":3.0,\"destination\":11005,\"id\":\"38a48092-edd0-4b35-89a9-3ea224d7e181\",\"timeline\":[{\"created_at\":\"2026-07-26T13:22:21.522563\",\"location\":11005,\"discription\":\"assigned to delivery_boy\",\"status\":\"placed\",\"id\":\"7ef3df15-afcb-4057-b6e7-01758bfd00b2\",\"shipment_id\":\"38a48092-edd0-4b35-89a9-3ea224d7e181\"},{\"created_at\":\"2026-07-26T13:25:00.906819\",\"location\":11003,\"discription\":\"scanned at 11003\",\"status\":\"in_transit\",\"id\":\"5e580861-1ba5-4ed5-ad1e-ee83b82afbae\",\"shipment_id\":\"38a48092-edd0-4b35-89a9-3ea224d7e181\"},{\"created_at\":\"2026-07-26T13:25:21.779441\",\"location\":11003,\"discription\":\"shipment out for delivery\",\"status\":\"out_for_delivery\",\"id\":\"bdedd2e6-ebdf-4a67-a137-fb019037b816\",\"shipment_id\":\"38a48092-edd0-4b35-89a9-3ea224d7e181\"},{\"created_at\":\"2026-07-26T13:31:27.933054\",\"location\":11003,\"discription\":\"scanned at 11003\",\"status\":\"in_transit\",\"id\":\"ea35c84a-b2f0-4584-a8f3-8a39094491ee\",\"shipment_id\":\"38a48092-edd0-4b35-89a9-3ea224d7e181\"},{\"created_at\":\"2026-07-26T13:32:04.645988\",\"location\":11003,\"discription\":\"successfully delivered\",\"status\":\"delivered\",\"id\":\"dce06377-0322-48c3-81c8-ef27e7a00e93\",\"shipment_id\":\"38a48092-edd0-4b35-89a9-3ea224d7e181\"}],\"estimated_delivery\":\"2026-07-29T13:22:21.473625\",\"tags\":[{\"instructions\":\"Package requires customs clearance\",\"id\":\"e763fe8c-6c50-45c3-ba0c-f02dad156191\",\"name\":\"international\"}]},{\"content\":\"smart glasses\",\"weight\":0.14,\"destination\":11002,\"id\":\"a8587b2d-5e36-404a-9f8f-ec8127656c32\",\"timeline\":[],\"estimated_delivery\":\"2026-07-08T03:30:23.627493\",\"tags\":[{\"instructions\":\"Package requires customs clearance\",\"id\":\"e763fe8c-6c50-45c3-ba0c-f02dad156191\",\"name\":\"international\"}]}]"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "response_schema_conformance",
+          "status": "failure",
+          "message": "Response violates schema\n\n\"2026-07-29T13:22:21.473625\" is not a \"date-time\"\n\nValidated against the response schema for status code 200.\n\nSchema at /components/schemas/ShipmentRead/properties/estimated_delivery:\n\n    {\n        \"format\": \"date-time\",\n        \"type\": \"string\",\n        \"title\": \"Estimated Delivery\"\n    }\n\nValue:\n\n    \"2026-07-29T13:22:21.473625\""
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 7.5830030255019665e-06,
+          "mode": "positive"
+        },
+        "components": {
+          "QUERY": "positive"
+        },
+        "phase": {
+          "name": "coverage",
+          "data": {
+            "type": "CoveragePhaseData",
+            "description": "Enum value",
+            "location": null,
+            "parameter": "tag_name",
+            "parameter_location": "QUERY",
+            "scenario": "enum_value"
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [
+          [
+            "query",
+            "tag_name"
+          ]
+        ],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {
+          "QUERY": {
+            "tag_name": "international"
+          }
+        }
+      },
+      "path": "/shipment/tagged",
+      "path_parameters": {},
+      "query": {
+        "tag_name": "international"
+      },
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "none"
+      },
+      "media_type": null,
+      "parent_index": null
+    }
+  ]
+}

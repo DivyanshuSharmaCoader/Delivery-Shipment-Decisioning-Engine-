@@ -1,0 +1,94 @@
+{
+  "operation": "DELETE /shipment/tag",
+  "method": "DELETE",
+  "path_template": "/shipment/tag",
+  "fingerprint": "87d98285",
+  "case_id": "8aidMg",
+  "code_sample": "curl -X DELETE 'http://127.0.0.1:8000/shipment/tag?id=e763fe8c-6c50-45c3-ba0c-f02dad156191&tag_name=documents'",
+  "sequence": [
+    {
+      "method": "DELETE",
+      "url": "http://127.0.0.1:8000/shipment/tag?id=e763fe8c-6c50-45c3-ba0c-f02dad156191&tag_name=documents",
+      "url_template": "http://127.0.0.1:8000/shipment/tag",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "8aidMg",
+        "Content-Length": "0"
+      },
+      "response": {
+        "status_code": 404,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:44 GMT",
+          "server": "uvicorn",
+          "content-length": "41",
+          "content-type": "application/json"
+        },
+        "body": "{\"detail\":\"Entity not found in database\"}"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "status_code_conformance",
+          "status": "failure",
+          "message": "Undocumented HTTP status code\n\nReceived: 404\nDocumented: 200, 422"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 7.58399983169511e-06,
+          "mode": "positive"
+        },
+        "components": {
+          "QUERY": "positive"
+        },
+        "phase": {
+          "name": "coverage",
+          "data": {
+            "type": "CoveragePhaseData",
+            "description": "Enum value",
+            "location": null,
+            "parameter": "tag_name",
+            "parameter_location": "QUERY",
+            "scenario": "enum_value"
+          }
+        },
+        "pool_draws": [
+          {
+            "location": "query",
+            "parameter_name": "id",
+            "resource_name": "Tag",
+            "resource_field": "id",
+            "source_operation": "GET /shipment/tagged",
+            "source_status": 200
+          }
+        ],
+        "pool_misses": [],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {
+          "QUERY": {
+            "id": "e763fe8c-6c50-45c3-ba0c-f02dad156191",
+            "tag_name": "documents"
+          }
+        }
+      },
+      "path": "/shipment/tag",
+      "path_parameters": {},
+      "query": {
+        "id": "e763fe8c-6c50-45c3-ba0c-f02dad156191",
+        "tag_name": "documents"
+      },
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "none"
+      },
+      "media_type": null,
+      "parent_index": null
+    }
+  ]
+}

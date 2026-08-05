@@ -2,7 +2,7 @@
     <p>Hi 👋,</p>
 
     <p>
-        Your order <strong>{{ shipment_id }}</strong> has been delivered
+        Your order <strong>{{ id }}</strong> has been delivered
         successfully.
     </p>
 
@@ -11,6 +11,12 @@
         <strong>{{ seller }}</strong>.
     </p>
 
+    <p>
+        Your package has been collected by you . Please share your experience and submit a review.
+    </p>
+    <a href = "{{ review_url }}" style = "color: #8a2be2;background-color: #e6d2f9;font-size: 16px;padding: .5em 1em;">
+        Submit Review
+    </a>
     <br>
 
     <p>Powered by FastShip</p>

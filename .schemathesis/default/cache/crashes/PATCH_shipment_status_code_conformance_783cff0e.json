@@ -1,0 +1,160 @@
+{
+  "operation": "PATCH /shipment/",
+  "method": "PATCH",
+  "path_template": "/shipment/",
+  "fingerprint": "783cff0e",
+  "case_id": "BtGT3y",
+  "code_sample": "curl -X GET -H 'Content-Type: application/json' 'http://127.0.0.1:8000/shipment/tagged?tag_name=return'\ncurl -X PATCH -H 'Content-Type: application/json' -d '\ufffdQ=' 'http://127.0.0.1:8000/shipment/?id=72dd86bf-2c07-3c63-864e-d6720695ab43'",
+  "sequence": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8000/shipment/tagged?tag_name=return",
+      "url_template": "http://127.0.0.1:8000/shipment/tagged",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "qJadHx"
+      },
+      "response": {
+        "status_code": 200,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:51 GMT",
+          "server": "uvicorn",
+          "content-length": "2",
+          "content-type": "application/json"
+        },
+        "body": "[]"
+      },
+      "link": null,
+      "checks": [],
+      "meta": {
+        "generation": {
+          "time": 0.0010649579999153502,
+          "mode": "positive"
+        },
+        "components": {
+          "QUERY": "positive"
+        },
+        "phase": {
+          "name": "stateful",
+          "data": {
+            "type": "StatefulPhaseData",
+            "description": "Positive test case",
+            "location": null,
+            "parameter": null,
+            "parameter_location": null,
+            "mutations": []
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {}
+      },
+      "path": "/shipment/tagged",
+      "path_parameters": {},
+      "query": {
+        "tag_name": "return"
+      },
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "none"
+      },
+      "media_type": null,
+      "parent_index": null
+    },
+    {
+      "method": "PATCH",
+      "url": "http://127.0.0.1:8000/shipment/?id=72dd86bf-2c07-3c63-864e-d6720695ab43",
+      "url_template": "http://127.0.0.1:8000/shipment/",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "BtGT3y",
+        "Content-Type": "application/json",
+        "Content-Length": "3"
+      },
+      "response": {
+        "status_code": 400,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:51 GMT",
+          "server": "uvicorn",
+          "content-length": "48",
+          "content-type": "application/json"
+        },
+        "body": "{\"detail\":\"There was an error parsing the body\"}"
+      },
+      "link": {
+        "operationId": "GET /shipment/tagged -> [200] PatchShipmentRead -> PATCH /shipment/",
+        "parameters": {
+          "query.id": "$response.body#/*/id"
+        }
+      },
+      "checks": [
+        {
+          "name": "status_code_conformance",
+          "status": "failure",
+          "message": "Undocumented HTTP status code\n\nReceived: 400\nDocumented: 200, 422"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 0.04343499999959022,
+          "mode": "negative"
+        },
+        "components": {
+          "QUERY": "negative",
+          "BODY": "negative"
+        },
+        "phase": {
+          "name": "stateful",
+          "data": {
+            "type": "StatefulPhaseData",
+            "description": "Invalid syntax: random bytes",
+            "location": null,
+            "parameter": null,
+            "parameter_location": "BODY",
+            "mutations": [
+              {
+                "path": [],
+                "schema_pointer": "",
+                "channel": "schema",
+                "operator": "syntax_fuzzing",
+                "keywords": [],
+                "parameter": null,
+                "original_value": null,
+                "new_value": null
+              }
+            ]
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {}
+      },
+      "path": "/shipment/",
+      "path_parameters": {},
+      "query": {
+        "id": "72dd86bf-2c07-3c63-864e-d6720695ab43"
+      },
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "base64",
+        "value": "0VE9"
+      },
+      "media_type": "application/json",
+      "parent_index": 0
+    }
+  ]
+}

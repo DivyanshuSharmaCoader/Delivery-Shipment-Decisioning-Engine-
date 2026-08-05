@@ -1,0 +1,90 @@
+{
+  "operation": "POST /seller/signup",
+  "method": "POST",
+  "path_template": "/seller/signup",
+  "fingerprint": "19e7b702",
+  "case_id": "W1AYTJ",
+  "code_sample": "curl -X POST -H 'Content-Type: application/json' -d ' \uc757\ufffdQ' http://127.0.0.1:8000/seller/signup",
+  "sequence": [
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:8000/seller/signup",
+      "url_template": "http://127.0.0.1:8000/seller/signup",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "W1AYTJ",
+        "Content-Type": "application/json",
+        "Content-Length": "6"
+      },
+      "response": {
+        "status_code": 400,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:46 GMT",
+          "server": "uvicorn",
+          "content-length": "48",
+          "content-type": "application/json"
+        },
+        "body": "{\"detail\":\"There was an error parsing the body\"}"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "status_code_conformance",
+          "status": "failure",
+          "message": "Undocumented HTTP status code\n\nReceived: 400\nDocumented: 200, 422"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 0.0006659170030616224,
+          "mode": "negative"
+        },
+        "components": {
+          "BODY": "negative"
+        },
+        "phase": {
+          "name": "fuzzing",
+          "data": {
+            "type": "FuzzingPhaseData",
+            "description": "Invalid syntax: random bytes",
+            "location": null,
+            "parameter": null,
+            "parameter_location": "BODY",
+            "mutations": [
+              {
+                "path": [],
+                "schema_pointer": "",
+                "channel": "schema",
+                "operator": "syntax_fuzzing",
+                "keywords": [],
+                "parameter": null,
+                "original_value": null,
+                "new_value": null
+              }
+            ]
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {}
+      },
+      "path": "/seller/signup",
+      "path_parameters": {},
+      "query": {},
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "base64",
+        "value": "IOydl59R"
+      },
+      "media_type": "application/json",
+      "parent_index": null
+    }
+  ]
+}

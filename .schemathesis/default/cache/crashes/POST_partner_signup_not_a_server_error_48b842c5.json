@@ -1,0 +1,85 @@
+{
+  "operation": "POST /partner/signup",
+  "method": "POST",
+  "path_template": "/partner/signup",
+  "fingerprint": "48b842c5",
+  "case_id": "vYrAeq",
+  "code_sample": "curl -X POST -H 'Content-Type: application/json' -d '{\"email\": \"0@a.com\", \"max_handling_capacity\": 0, \"name\": \"\", \"serviceable_zip_code\": []}' http://127.0.0.1:8000/partner/signup",
+  "sequence": [
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:8000/partner/signup",
+      "url_template": "http://127.0.0.1:8000/partner/signup",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "vYrAeq",
+        "Content-Type": "application/json",
+        "Content-Length": "88"
+      },
+      "response": {
+        "status_code": 500,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:43 GMT",
+          "server": "uvicorn",
+          "x-error": "<module 'asyncio.exceptions' from '/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/exceptions.py'>",
+          "content-length": "37",
+          "content-type": "application/json"
+        },
+        "body": "{\"detail\":\"Something went wrong ...\"}"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "not_a_server_error",
+          "status": "failure",
+          "message": "Server error"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 3.6249984987080097e-06,
+          "mode": "negative"
+        },
+        "components": {
+          "BODY": "negative"
+        },
+        "phase": {
+          "name": "coverage",
+          "data": {
+            "type": "CoveragePhaseData",
+            "description": "Missing required property: password",
+            "location": "/required",
+            "parameter": "application/json",
+            "parameter_location": "BODY",
+            "scenario": "object_missing_required_property"
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {}
+      },
+      "path": "/partner/signup",
+      "path_parameters": {},
+      "query": {},
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "json",
+        "value": {
+          "email": "0@a.com",
+          "max_handling_capacity": 0,
+          "name": "",
+          "serviceable_zip_code": []
+        }
+      },
+      "media_type": "application/json",
+      "parent_index": null
+    }
+  ]
+}

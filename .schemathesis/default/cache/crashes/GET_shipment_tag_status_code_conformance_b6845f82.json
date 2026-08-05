@@ -1,0 +1,93 @@
+{
+  "operation": "GET /shipment/tag",
+  "method": "GET",
+  "path_template": "/shipment/tag",
+  "fingerprint": "b6845f82",
+  "case_id": "nKTFUK",
+  "code_sample": "curl -X GET 'http://127.0.0.1:8000/shipment/tag?id=e3e70682-c209-1cac-a29f-6fbed82c07cd&tag_name=documents'",
+  "sequence": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8000/shipment/tag?id=e3e70682-c209-1cac-a29f-6fbed82c07cd&tag_name=documents",
+      "url_template": "http://127.0.0.1:8000/shipment/tag",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "nKTFUK"
+      },
+      "response": {
+        "status_code": 404,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:44 GMT",
+          "server": "uvicorn",
+          "content-length": "41",
+          "content-type": "application/json"
+        },
+        "body": "{\"detail\":\"Entity not found in database\"}"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "status_code_conformance",
+          "status": "failure",
+          "message": "Undocumented HTTP status code\n\nReceived: 404\nDocumented: 200, 422"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 7.542003004346043e-06,
+          "mode": "positive"
+        },
+        "components": {
+          "QUERY": "positive"
+        },
+        "phase": {
+          "name": "coverage",
+          "data": {
+            "type": "CoveragePhaseData",
+            "description": "Enum value",
+            "location": null,
+            "parameter": "tag_name",
+            "parameter_location": "QUERY",
+            "scenario": "enum_value"
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [
+          [
+            "query",
+            "id"
+          ],
+          [
+            "query",
+            "tag_name"
+          ]
+        ],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {
+          "QUERY": {
+            "id": "e3e70682-c209-1cac-a29f-6fbed82c07cd",
+            "tag_name": "documents"
+          }
+        }
+      },
+      "path": "/shipment/tag",
+      "path_parameters": {},
+      "query": {
+        "id": "e3e70682-c209-1cac-a29f-6fbed82c07cd",
+        "tag_name": "documents"
+      },
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "none"
+      },
+      "media_type": null,
+      "parent_index": null
+    }
+  ]
+}

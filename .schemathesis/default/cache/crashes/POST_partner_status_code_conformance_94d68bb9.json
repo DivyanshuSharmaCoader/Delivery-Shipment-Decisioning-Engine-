@@ -1,0 +1,83 @@
+{
+  "operation": "POST /partner/",
+  "method": "POST",
+  "path_template": "/partner/",
+  "fingerprint": "94d68bb9",
+  "case_id": "yNvcSl",
+  "code_sample": "curl -X POST -H 'Content-Type: application/json' -d '[null, null]' http://127.0.0.1:8000/partner/",
+  "sequence": [
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:8000/partner/",
+      "url_template": "http://127.0.0.1:8000/partner/",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "yNvcSl",
+        "Content-Type": "application/json",
+        "Content-Length": "12"
+      },
+      "response": {
+        "status_code": 401,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:43 GMT",
+          "server": "uvicorn",
+          "www-authenticate": "[Filtered]",
+          "content-length": "30",
+          "content-type": "application/json"
+        },
+        "body": "{\"detail\":\"Not authenticated\"}"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "status_code_conformance",
+          "status": "failure",
+          "message": "Undocumented HTTP status code\n\nReceived: 401\nDocumented: 200, 422"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 5.041998520027846e-06,
+          "mode": "negative"
+        },
+        "components": {
+          "BODY": "negative"
+        },
+        "phase": {
+          "name": "coverage",
+          "data": {
+            "type": "CoveragePhaseData",
+            "description": "Incorrect type",
+            "location": "/type",
+            "parameter": "application/json",
+            "parameter_location": "BODY",
+            "scenario": "incorrect_type"
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {}
+      },
+      "path": "/partner/",
+      "path_parameters": {},
+      "query": {},
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "json",
+        "value": [
+          null,
+          null
+        ]
+      },
+      "media_type": "application/json",
+      "parent_index": null
+    }
+  ]
+}

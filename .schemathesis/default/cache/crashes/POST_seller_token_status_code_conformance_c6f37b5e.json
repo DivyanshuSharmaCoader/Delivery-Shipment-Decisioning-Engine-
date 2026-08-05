@@ -1,0 +1,82 @@
+{
+  "operation": "POST /seller/token",
+  "method": "POST",
+  "path_template": "/seller/token",
+  "fingerprint": "c6f37b5e",
+  "case_id": "T7nkyd",
+  "code_sample": "curl -X POST -H 'Content-Type: application/x-www-form-urlencoded' -d 'password=0&username=0' http://127.0.0.1:8000/seller/token",
+  "sequence": [
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:8000/seller/token",
+      "url_template": "http://127.0.0.1:8000/seller/token",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "T7nkyd",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": "21"
+      },
+      "response": {
+        "status_code": 401,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:46 GMT",
+          "server": "uvicorn",
+          "content-length": "48",
+          "content-type": "application/json"
+        },
+        "body": "{\"detail\":\"User email or password is incorrect\"}"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "status_code_conformance",
+          "status": "failure",
+          "message": "Undocumented HTTP status code\n\nReceived: 401\nDocumented: 200, 422"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 0.003640832997916732,
+          "mode": "positive"
+        },
+        "components": {
+          "BODY": "positive"
+        },
+        "phase": {
+          "name": "fuzzing",
+          "data": {
+            "type": "FuzzingPhaseData",
+            "description": "Positive test case",
+            "location": null,
+            "parameter": null,
+            "parameter_location": null,
+            "mutations": []
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {}
+      },
+      "path": "/seller/token",
+      "path_parameters": {},
+      "query": {},
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "json",
+        "value": {
+          "password": "[Filtered]",
+          "username": "0"
+        }
+      },
+      "media_type": "application/x-www-form-urlencoded",
+      "parent_index": null
+    }
+  ]
+}

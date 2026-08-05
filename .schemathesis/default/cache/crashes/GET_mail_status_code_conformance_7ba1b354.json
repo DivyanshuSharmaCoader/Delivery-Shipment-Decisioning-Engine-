@@ -1,0 +1,75 @@
+{
+  "operation": "GET /mail",
+  "method": "GET",
+  "path_template": "/mail",
+  "fingerprint": "7ba1b354",
+  "case_id": "DjsDMe",
+  "code_sample": "curl -X GET http://127.0.0.1:8000/mail",
+  "sequence": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8000/mail",
+      "url_template": "http://127.0.0.1:8000/mail",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "DjsDMe"
+      },
+      "response": {
+        "status_code": 500,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:44 GMT",
+          "server": "uvicorn",
+          "x-error": "<module 'asyncio.exceptions' from '/Library/Frameworks/Python.framework/Versions/3.13/lib/python3.13/asyncio/exceptions.py'>",
+          "content-length": "37",
+          "content-type": "application/json"
+        },
+        "body": "{\"detail\":\"Something went wrong ...\"}"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "status_code_conformance",
+          "status": "failure",
+          "message": "Undocumented HTTP status code\n\nReceived: 500\nDocumented: 200"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 2.0416999177541584e-05,
+          "mode": "positive"
+        },
+        "components": {},
+        "phase": {
+          "name": "coverage",
+          "data": {
+            "type": "CoveragePhaseData",
+            "description": "Default positive test case",
+            "location": null,
+            "parameter": null,
+            "parameter_location": null,
+            "scenario": "default_positive_test"
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {}
+      },
+      "path": "/mail",
+      "path_parameters": {},
+      "query": {},
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "none"
+      },
+      "media_type": null,
+      "parent_index": null
+    }
+  ]
+}

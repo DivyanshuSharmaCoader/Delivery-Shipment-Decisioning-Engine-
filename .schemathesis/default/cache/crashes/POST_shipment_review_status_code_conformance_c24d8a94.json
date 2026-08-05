@@ -1,0 +1,89 @@
+{
+  "operation": "POST /shipment/review",
+  "method": "POST",
+  "path_template": "/shipment/review",
+  "fingerprint": "c24d8a94",
+  "case_id": "Wlhb6n",
+  "code_sample": "curl -X POST -H 'Content-Type: application/x-www-form-urlencoded' -d rating=1 'http://127.0.0.1:8000/shipment/review?token=%5BFiltered%5D'",
+  "sequence": [
+    {
+      "method": "POST",
+      "url": "http://127.0.0.1:8000/shipment/review?token=%5BFiltered%5D",
+      "url_template": "http://127.0.0.1:8000/shipment/review",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "Wlhb6n",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Length": "8"
+      },
+      "response": {
+        "status_code": 401,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:44 GMT",
+          "server": "uvicorn",
+          "content-length": "47",
+          "content-type": "application/json"
+        },
+        "body": "{\"detail\":\"Access token is invalid or expired\"}"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "status_code_conformance",
+          "status": "failure",
+          "message": "Undocumented HTTP status code\n\nReceived: 401\nDocumented: 200, 422"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 2.941599814221263e-05,
+          "mode": "positive"
+        },
+        "components": {
+          "QUERY": "positive",
+          "BODY": "positive"
+        },
+        "phase": {
+          "name": "coverage",
+          "data": {
+            "type": "CoveragePhaseData",
+            "description": "Object with valid 'comment' value: Value null value",
+            "location": null,
+            "parameter": "application/x-www-form-urlencoded",
+            "parameter_location": "BODY",
+            "scenario": "valid_object"
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {
+          "QUERY": {
+            "token": ""
+          }
+        }
+      },
+      "path": "/shipment/review",
+      "path_parameters": {},
+      "query": {
+        "token": "[Filtered]"
+      },
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "json",
+        "value": {
+          "rating": 1,
+          "comment": null
+        }
+      },
+      "media_type": "application/x-www-form-urlencoded",
+      "parent_index": null
+    }
+  ]
+}

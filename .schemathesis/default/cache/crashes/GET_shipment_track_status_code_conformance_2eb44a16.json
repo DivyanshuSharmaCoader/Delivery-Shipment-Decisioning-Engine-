@@ -1,0 +1,87 @@
+{
+  "operation": "GET /shipment/track",
+  "method": "GET",
+  "path_template": "/shipment/track",
+  "fingerprint": "2eb44a16",
+  "case_id": "Ep98HT",
+  "code_sample": "curl -X GET 'http://127.0.0.1:8000/shipment/track?id=e3e70682-c209-1cac-a29f-6fbed82c07cd'",
+  "sequence": [
+    {
+      "method": "GET",
+      "url": "http://127.0.0.1:8000/shipment/track?id=e3e70682-c209-1cac-a29f-6fbed82c07cd",
+      "url_template": "http://127.0.0.1:8000/shipment/track",
+      "headers": {
+        "User-Agent": "schemathesis/4.24.3",
+        "Accept-Encoding": "gzip, deflate",
+        "Accept": "*/*",
+        "Connection": "keep-alive",
+        "X-Schemathesis-TestCaseId": "Ep98HT"
+      },
+      "response": {
+        "status_code": 404,
+        "headers": {
+          "date": "Tue, 28 Jul 2026 15:32:44 GMT",
+          "server": "uvicorn",
+          "content-length": "41",
+          "content-type": "application/json"
+        },
+        "body": "{\"detail\":\"Entity not found in database\"}"
+      },
+      "link": null,
+      "checks": [
+        {
+          "name": "status_code_conformance",
+          "status": "failure",
+          "message": "Undocumented HTTP status code\n\nReceived: 404\nDocumented: 200, 422"
+        }
+      ],
+      "meta": {
+        "generation": {
+          "time": 8.450000314041972e-05,
+          "mode": "positive"
+        },
+        "components": {
+          "QUERY": "positive"
+        },
+        "phase": {
+          "name": "coverage",
+          "data": {
+            "type": "CoveragePhaseData",
+            "description": "Default positive test case",
+            "location": null,
+            "parameter": null,
+            "parameter_location": null,
+            "scenario": "default_positive_test"
+          }
+        },
+        "pool_draws": [],
+        "pool_misses": [
+          [
+            "query",
+            "id"
+          ]
+        ],
+        "semantic_draws": [],
+        "dictionary_draws": [],
+        "constants_draws": [],
+        "raw_containers": {
+          "QUERY": {
+            "id": "e3e70682-c209-1cac-a29f-6fbed82c07cd"
+          }
+        }
+      },
+      "path": "/shipment/track",
+      "path_parameters": {},
+      "query": {
+        "id": "e3e70682-c209-1cac-a29f-6fbed82c07cd"
+      },
+      "case_headers": {},
+      "cookies": {},
+      "case_body": {
+        "encoding": "none"
+      },
+      "media_type": null,
+      "parent_index": null
+    }
+  ]
+}

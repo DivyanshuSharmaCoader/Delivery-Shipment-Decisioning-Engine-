@@ -19,6 +19,7 @@ services:
 
   api:
     build: .
+    container_name: api
     command: fastapi run --port 8000
     ports:
       - "8000:8000"
@@ -30,11 +31,22 @@ services:
 
   worker:
     build: .
+    container_name: celery-worker
     command: celery -A app.worker.tasks.app worker --loglevel=info
     env_file:
       - .env
     depends_on:
+      - postgres
       - redis
+
+  frontend:
+    build:
+      context: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
 
 volumes:
   postgres_data:

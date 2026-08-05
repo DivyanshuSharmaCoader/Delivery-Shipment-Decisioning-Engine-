@@ -30,7 +30,7 @@ import { ShipmentStatus, type Shipment, type ShipmentUpdate } from "~/lib/client
 import { cn, getLatestStatus } from "~/lib/utils"
 import { Button } from "./ui/button"
 import { SubmitButton } from "./ui/submit-button"
-import { QrReader } from 'react-qr-reader'
+import { Scanner } from "@yudiel/react-qr-scanner"
 
 
 const statusValues = [
@@ -197,7 +197,11 @@ function QRScanner({ onScan }: { onScan: (id: string) => void }) {
 
     return <Drawer open={open} onDrag={() => setOpen(false)}>
     
-    <Button variant="outline" onClick={() => setOpen(true)}>
+    <Button
+    type="button"
+    variant="outline"
+    onClick={() => setOpen(true)}
+    >
         <ScanQrCode />
     </Button>
 
@@ -207,17 +211,18 @@ function QRScanner({ onScan }: { onScan: (id: string) => void }) {
       </DrawerHeader>
       {
         open && <>
-            <video id="qr-scan-video"></video>
-            <QrReader
-                videoId="qr-scan-video"
-                onResult={(result, error) => {
-                    if (result) {
-                        onScan(result.getText())
-                        setOpen(false)
-                    }
-                }}
+            <Scanner
                 constraints={{ facingMode: "environment" }}
-            />
+                onScan={(results) => {
+                if (results.length > 0) {
+                    onScan(results[0].rawValue)
+                    setOpen(false)
+                }
+            }}
+            onError={(error) => {
+                console.error(error)
+            }}
+/>
         </>
       }
     </DrawerContent>

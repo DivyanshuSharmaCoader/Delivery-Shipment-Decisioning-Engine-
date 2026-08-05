@@ -27,3 +27,7 @@ file.log
 docker-compose.override.yml
 
 frontend/node_modules/
+
+
+dump.rdb
+celerybeat-schedule

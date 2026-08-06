@@ -34,7 +34,6 @@ class DatabaseSettings(BaseSettings):
         return (
             f"rediss://{self.REDIS_USERNAME}:{self.REDIS_PASSWORD}"
             f"@{self.REDIS_HOST}:{self.REDIS_PORT}/{db}"
-            "?ssl_cert_reqs=CERT_NONE"
     )
 
 class SecuritySettings(BaseSettings):

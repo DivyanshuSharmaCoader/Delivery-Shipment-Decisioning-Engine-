@@ -14,7 +14,8 @@ from sqlmodel import SQLModel
 config = context.config
 config.set_main_option(
     "sqlalchemy.url", 
-    db_settings.POSTGRES_URL
+    #db_settings.POSTGRES_URL
+    "postgresql+asyncpg://fastship_1gq6_user:sDUJVPUxNwJ6zhtm5ZyGT8InWVB04cJq@dpg-d9q2uem417fc73feiu20-a.oregon-postgres.render.com/fastship_1gq6"
     )
 
 # Interpret the config file for Python logging.

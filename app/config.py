@@ -21,6 +21,8 @@ class DatabaseSettings(BaseSettings):
 
     REDIS_HOST: str
     REDIS_PORT: int
+    REDIS_PASSWORD: str
+    REDIS_USERNAME: str
 
     model_config = _base_config
 
@@ -29,7 +31,10 @@ class DatabaseSettings(BaseSettings):
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
 
     def REDIS_URL(self, db):
-        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{db}"
+        return (
+            f"rediss://{self.REDIS_USERNAME}:{self.REDIS_PASSWORD}"
+            f"@{self.REDIS_HOST}:{self.REDIS_PORT}/{db}"
+    )
 
 class SecuritySettings(BaseSettings):
     JWT_SECRET: str

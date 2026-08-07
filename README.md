@@ -6,7 +6,7 @@
 
 ## 📊 Executive Summary
 
-FastShip is a production-grade logistics platform engineered to address critical inefficiencies in traditional shipment management workflows. Rather than building a simple CRUD application, this project models **real-world enterprise operations** where multiple business stakeholders interact through secured APIs, automated workflows, and centralized data governance—principles fundamental to JPMorgan's operational framework.
+FastShip is a production-grade logistics platform engineered to address critical inefficiencies in traditional shipment management workflows. Rather than building a simple CRUD application, this project models **real-world enterprise operations** where multiple business stakeholders interact through secured APIs, automated workflows, and centralized data governance—principles fundamental to operational frameworks.
 
 ### Business Problem Addressed
 
@@ -244,7 +244,7 @@ Production Environment Updated
 - Delivery partner identification
 - Estimated delivery window
 
-**Cross-Functional Insight**: This multi-stakeholder model mirrors JPMorgan's internal operations where different business units (Operations, Risk, Finance, Technology) must coordinate through shared systems and workflows.
+**Cross-Functional Insight**: This multi-stakeholder model mirrors internal operations where different business units (Operations, Risk, Finance, Technology) must coordinate through shared systems and workflows.
 
 ---
 
@@ -357,7 +357,7 @@ This project demonstrates proficiency across **enterprise software engineering p
 
 ---
 
-## 🎯 Relevance to JPMorgan Corporate Analyst Development Program
+## 🎯 Professional Skills Demonstrated
 
 **Analytics Capability**: Event logging and performance metrics demonstrate ability to extract insights from complex operational data and present them to senior management.
 
@@ -399,7 +399,7 @@ FastShip is far more than a coding exercise—it's a **demonstration of enterpri
 - **Business acumen** in understanding multi-stakeholder workflows
 - **Leadership potential** through systematic problem-solving
 
-For JPMorgan's Corporate Analyst Development Program, this project demonstrates the analytical, technical, and operational excellence required to drive growth, optimize processes, and manage risk across a dynamic enterprise.
+This project demonstrates the analytical, technical, and operational excellence required to drive growth, optimize processes, and manage risk across a dynamic enterprise.
 
 ---
 

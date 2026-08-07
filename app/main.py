@@ -15,6 +15,7 @@ from uuid import uuid4
 from typing import Annotated
 from uuid import UUID
 from fastapi import Depends
+import os
 
 description = """
 Delivery Management System for sellers and delivery Agents
@@ -66,13 +67,15 @@ app = FastAPI(
     ]
 )
 
+
+allowed_origins = os.getenv(
+    "ALLOWED_ORIGINS",
+    "http://localhost:5173"
+).split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "https://delivery-shipment-decisioning-engin.vercel.app",
-        "https://delivery-shipment-decisi-git-ac1991-divyanshu-sharma-s-projects.vercel.app",
-    ],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

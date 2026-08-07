@@ -69,10 +69,10 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-    "http://localhost:5173",
-    "https://delivery-shipment-decisioning-engin.vercel.app",
-    "https://delivery-shipment-decisi-git-ac1991-divyanshu-sharma-s-projects.vercel.app",
-],
+        "http://localhost:5173",
+        "https://delivery-shipment-decisioning-engin.vercel.app",
+        "https://delivery-shipment-decisi-git-ac1991-divyanshu-sharma-s-projects.vercel.app",
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

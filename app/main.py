@@ -73,6 +73,8 @@ allowed_origins = os.getenv(
     "http://localhost:5173"
 ).split(",")
 
+print(repr(allowed_origins))
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,

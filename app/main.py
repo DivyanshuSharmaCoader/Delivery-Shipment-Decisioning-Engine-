@@ -68,12 +68,15 @@ app = FastAPI(
 )
 
 
-allowed_origins = os.getenv(
-    "ALLOWED_ORIGINS",
-    "http://localhost:5173"
-).split(",")
+allowed_origins = [
+    "http://localhost:5173",
+    "https://delivery-shipment-decisioning-engin.vercel.app",
+]
 
-print(repr(allowed_origins))
+print("=" * 50)
+print("ALLOWED ORIGINS:")
+print(allowed_origins)
+print("=" * 50)
 
 app.add_middleware(
     CORSMiddleware,

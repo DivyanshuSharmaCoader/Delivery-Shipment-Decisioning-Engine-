@@ -1,22 +1,19 @@
 from contextlib import asynccontextmanager
 from time import perf_counter
-from app.worker.tasks import add_log
-from fastapi import BackgroundTasks, FastAPI, HTTPException, Request, Response
-from fastapi.responses import FileResponse, JSONResponse
-from scalar_fastapi import get_scalar_api_reference
+
+from fastapi import BackgroundTasks, FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from scalar_fastapi import get_scalar_api_reference
+
 from app.api.router import master_router
+from app.api.tag import APITag
 from app.core.exceptions import add_exception_handlers
 from app.database.session import create_db_tables
 from app.services.notification import NotificationSerice
-from app.utils import APP_DIR
-from app.api.tag import APITag
-from uuid import uuid4
+from uuid import uuid4, UUID
 from typing import Annotated
-from uuid import UUID
 from fastapi import Depends
-import os
-from app.config import app_settings
+
 
 description = """
 Delivery Management System for sellers and delivery Agents
@@ -32,22 +29,21 @@ Delivery Agent
 """
 
 
-
 @asynccontextmanager
 async def lifespan_handler(app: FastAPI):
     await create_db_tables()
     yield
 
+
 app = FastAPI(
-    # Server start/stop listener
-    title = "FastShip",
-    description = description,
+    title="FastShip",
+    description=description,
     lifespan=lifespan_handler,
-    docs_url = None,
-    redoc_url = None,
+    docs_url=None,
+    redoc_url=None,
     version="0.1.0",
     terms_of_service="https://fastship.com/terms/",
-    contact = {
+    contact={
         "name": "FastShip Support",
         "url": "https://fastship.com/support",
         "email": "support@fastship.com",
@@ -65,10 +61,13 @@ app = FastAPI(
             "name": APITag.PARTNER,
             "description": "Operations related to delivery partner",
         },
-    ]
+    ],
 )
 
 
+# ============================================================
+# CORS
+# ============================================================
 
 app.add_middleware(
     CORSMiddleware,
@@ -80,37 +79,83 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+# ============================================================
+# ROUTERS
+# ============================================================
+
 app.include_router(master_router)
 
 add_exception_handlers(app)
 
+
+# ============================================================
+# HTTP LOGGING MIDDLEWARE
+# ============================================================
+
 @app.middleware("http")
 async def custom_middleware(request: Request, call_next):
     start = perf_counter()
+
     response: Response = await call_next(request)
+
     end = perf_counter()
     time_taken = round(end - start, 2)
-    add_log.delay(f"{request.method} {request.url} ({response.status_code}) {time_taken} s")
+
+    # IMPORTANT:
+    # Do NOT call add_log.delay() here for now.
+    # A Redis/Celery connection problem can block HTTP responses.
+    #
+    # We are intentionally removing:
+    #
+    # add_log.delay(
+    #     f"{request.method} {request.url} "
+    #     f"({response.status_code}) {time_taken} s"
+    # )
+
     return response
 
+
+# ============================================================
+# CUSTOM RESPONSE
+# ============================================================
+
 class UpperResponse(Response):
-    def __init__(self, content = None, status_code = 200, headers = None, media_type = None, background = None):
-        super().__init__(content, status_code, headers, media_type, background)
+    def __init__(
+        self,
+        content=None,
+        status_code=200,
+        headers=None,
+        media_type=None,
+        background=None,
+    ):
+        super().__init__(
+            content,
+            status_code,
+            headers,
+            media_type,
+            background,
+        )
 
     def render(self, content):
         content = content.upper()
         return super().render(content)
 
 
-#custom response
-@app.get("/custom", response_class = UpperResponse,)
+@app.get("/custom", response_class=UpperResponse)
 def get_custom_response():
     return "sample shipment"
+
 
 @app.get("/custom-new")
 def get_new_data():
     return "NEW CUSTOM RESPONSE!"
 
+
+# ============================================================
+# TEST MAIL ENDPOINT
+# ============================================================
 
 @app.get("/mail")
 async def send_test_mail(tasks: BackgroundTasks):
@@ -118,22 +163,35 @@ async def send_test_mail(tasks: BackgroundTasks):
         NotificationSerice().send_email,
         recipients=["todd@xmailg.one"],
         subject="Test Mail comming through once",
-        body="You should'nt be interested in everybody..."
+        body="You should'nt be interested in everybody...",
     )
+
     return {"detail": "Mail Sent"}
 
-#Example Dependency
+
+# ============================================================
+# EXAMPLE DEPENDENCY
+# ============================================================
+
 def get_id():
     return uuid4()
 
-#Scalar Running Status
+
+# ============================================================
+# ROOT / RUNNING STATUS
+# ============================================================
+
 @app.get("/")
 def read_root(id: Annotated[UUID, Depends(get_id)]):
     return {
         "detail": str(id),
-        }
+    }
 
-### Scalar API Documentation
+
+# ============================================================
+# SCALAR API DOCUMENTATION
+# ============================================================
+
 @app.get("/docs", include_in_schema=False)
 def get_scalar_docs():
     return get_scalar_api_reference(

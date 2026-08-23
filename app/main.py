@@ -77,10 +77,9 @@ app.add_middleware(
         "https://delivery-shipment-decisioning-engin.vercel.app",
     ],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allow_methods=["*"],
     allow_headers=["*"],
 )
-
 app.include_router(master_router)
 
 add_exception_handlers(app)

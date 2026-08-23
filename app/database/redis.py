@@ -1,12 +1,11 @@
 from uuid import UUID
-
 from redis.asyncio import Redis
 
 from app.config import db_settings
 
 
 _token_blacklist = Redis.from_url(
-    db_settings.REDIS_URL(0),
+    db_settings.REDIS_URL(0)
 )
 
 _shipment_verification_codes = Redis.from_url(

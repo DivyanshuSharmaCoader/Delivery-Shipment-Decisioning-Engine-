@@ -71,8 +71,8 @@ app = FastAPI(
 
 
 allowed_origins = [
-    origin.strip()
-    for origin in app_settings.ALLOWED_ORIGINS.split(",")
+    "http://localhost:5173",
+    "https://delivery-shipment-decisioning-engin.vercel.app",
 ]
 
 print("=" * 50)

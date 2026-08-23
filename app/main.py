@@ -16,6 +16,7 @@ from typing import Annotated
 from uuid import UUID
 from fastapi import Depends
 import os
+from app.config import app_settings
 
 description = """
 Delivery Management System for sellers and delivery Agents
@@ -68,9 +69,10 @@ app = FastAPI(
 )
 
 
+
 allowed_origins = [
-    "http://localhost:5173",
-    "https://delivery-shipment-decisioning-engin.vercel.app",
+    origin.strip()
+    for origin in app_settings.ALLOWED_ORIGINS.split(",")
 ]
 
 print("=" * 50)

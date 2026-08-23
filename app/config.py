@@ -11,6 +11,9 @@ _base_config = SettingsConfigDict(
 class AppSettings(BaseSettings):
     APP_NAME: str = "FastShip"
     APP_DOMAIN: str = "localhost:8000"
+    ALLOWED_ORIGINS: str = "http://localhost:5173"
+    
+    model_config = _base_config
 
 class DatabaseSettings(BaseSettings):
     POSTGRES_SERVER: str

@@ -75,11 +75,6 @@ allowed_origins = [
     "https://delivery-shipment-decisioning-engin.vercel.app",
 ]
 
-print("=" * 50)
-print("ALLOWED ORIGINS:")
-print(allowed_origins)
-print("=" * 50)
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,

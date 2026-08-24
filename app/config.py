@@ -63,6 +63,7 @@ class SecuritySettings(BaseSettings):
 
 
 class NotificationSettings(BaseSettings):
+    RESEND_API_KEY: str = ""
     MAIL_USERNAME: str
     MAIL_PASSWORD: str
     MAIL_FROM: str

@@ -1,67 +1,58 @@
 from fastapi import BackgroundTasks
-from fastapi_mail import ConnectionConfig, FastMail, MessageSchema, MessageType
 from pydantic import EmailStr
 from twilio.rest import Client
 
 from app.config import notification_settings
-from app.utils import TEMPLATE_DIR
+from app.worker.tasks import render_template, send_email_api
 
 
 class NotificationSerice:
-    def __init__(self, tasks: BackgroundTasks):
+    def __init__(self, tasks: BackgroundTasks | None = None):
         self.tasks = tasks
-        self.fastmail = FastMail(
-            ConnectionConfig(
-                **notification_settings.model_dump(
-                     exclude = ["TWILIO_SID", "TWILIO_AUTH_TOKEN", "TWILIO_NUMBER"]
-                ),
-                TEMPLATE_FOLDER=TEMPLATE_DIR,
-            )
-        )
         self.twilio_client = Client(
-             notification_settings.TWILIO_SID,
-             notification_settings.TWILIO_AUTH_TOKEN,
+            notification_settings.TWILIO_SID or "AC_dummy",
+            notification_settings.TWILIO_AUTH_TOKEN or "dummy_token",
         )
-
 
     async def send_email(
-                self,
-                recipients: list[EmailStr],
-                subject: str,
-                body: str,
-        ):
-
+        self,
+        recipients: list[EmailStr],
+        subject: str,
+        body: str,
+    ):
+        if self.tasks:
             self.tasks.add_task(
-                 self.fastmail.send_message,
-                 message=MessageSchema(
-                    recipients=recipients,
-                    subject=subject,
-                    body=body,
-                    subtype=MessageType.plain,
-                 )
+                send_email_api,
+                recipients=recipients,
+                subject=subject,
+                text=body,
             )
+        else:
+            send_email_api(recipients=recipients, subject=subject, text=body)
 
     async def send_email_with_template(
-              self,
-              recipients: list[EmailStr],
-              subject: str,
-              context: dict,
-              template_name: str,
+        self,
+        recipients: list[EmailStr],
+        subject: str,
+        context: dict,
+        template_name: str,
     ):
-         self.tasks.add_task(
-              self.fastmail.send_message,
-              message=MessageSchema(
-                    recipients=recipients,
-                    subject=subject,
-                    template_body=context,
-                    subtype=MessageType.html,
-                 ),
-              template_name=template_name, 
-         )
+        html_content = render_template(template_name, context)
+        if self.tasks:
+            self.tasks.add_task(
+                send_email_api,
+                recipients=recipients,
+                subject=subject,
+                html=html_content,
+            )
+        else:
+            send_email_api(recipients=recipients, subject=subject, html=html_content)
 
     async def send_sms(self, to: str, body: str):
-         self.twilio_client.messages.create(
-              from_ = notification_settings.TWILIO_NUMBER,
-              to = to,
-              body = body,
-         )
+        if notification_settings.SUPPRESS_SEND:
+            return "Suppressed SMS"
+        self.twilio_client.messages.create(
+            from_=notification_settings.TWILIO_NUMBER,
+            to=to,
+            body=body,
+        )

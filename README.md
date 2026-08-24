@@ -178,21 +178,29 @@ User Receives Instant Feedback
 ### Dual-Mode Task Execution
 The application implements a **Celery-based background-task architecture** with Redis as the broker. All background tasks (email notifications, SMS delivery, logging) are defined as Celery tasks in `app/worker/tasks.py` and dispatched through a configurable execution layer (`app/worker/executor.py`).
 
-- **Current Deployment** (`TASK_EXECUTION_MODE=direct`): Task logic executes directly within the FastAPI service. No Celery worker or Redis broker queue is required.
+- **Current Deployment** (`TASK_EXECUTION_MODE=direct`): Task logic executes directly within the FastAPI service without requiring a dedicated paid Celery worker. Emails are delivered via the Resend HTTPS API (`https://api.resend.com/emails`), bypassing cloud hosting provider restrictions on outbound SMTP ports (such as Render's port 587 block).
 - **Future Deployment** (`TASK_EXECUTION_MODE=celery`): Tasks are dispatched via `.delay()` to a dedicated Celery worker through the Redis broker, enabling fully asynchronous, distributed processing.
 
-This architecture ensures **one source of truth** for all task/business logic — the same task implementation serves both execution modes with zero code duplication.
+This architecture ensures **one source of truth** for all task/business logic — the exact same task implementation serves both execution modes with zero code duplication.
+
+### Environment Configuration for Email Delivery
+Set `RESEND_API_KEY` in environment variables:
+```env
+RESEND_API_KEY=re_123456789...
+MAIL_FROM=onboarding@resend.dev
+MAIL_FROM_NAME=FastShip
+```
 
 ### Workflow Automation
 1. **Shipment Status Changes** → Notification tasks dispatched
 2. **Event Logging** → Recorded in PostgreSQL
-3. **Notification Tasks** → Email (SMTP) + SMS (Twilio) via configurable execution mode
-4. **Multi-Channel Delivery** → SMTP (Email) + Twilio (SMS) sent concurrently
+3. **Notification Tasks** → Email (Resend HTTPS API) + SMS (Twilio) via configurable execution mode
+4. **Multi-Channel Delivery** → Email + Twilio SMS sent concurrently
 5. **Audit Trail** → Complete event history maintained
 
 **Impact**: 
 - Production-grade task architecture ready for distributed processing
-- Improved user experience through decoupled notification delivery
+- Reliable email delivery over HTTPS on cloud platforms like Render
 - Non-blocking operations enable horizontal scaling
 - Cost-effective deployment without sacrificing architectural quality
 

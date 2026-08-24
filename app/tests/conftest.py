@@ -50,7 +50,8 @@ async def setup_and_teardown():
 
     from app.worker.tasks import fastmail, twilio_client
     from unittest.mock import MagicMock
-    fastmail.config.SUPPRESS_SEND = 1
+    from app.config import notification_settings
+    notification_settings.SUPPRESS_SEND = 1
     twilio_client.messages.create = MagicMock()
 
     app.dependency_overrides[get_session] = get_session_override

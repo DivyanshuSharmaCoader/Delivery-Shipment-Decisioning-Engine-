@@ -43,46 +43,84 @@ def render_template(template_name: str, context: dict) -> str:
     return template.render(**context)
 
 
-def send_email_api(recipients: list[str], subject: str, html: str | None = None, text: str | None = None):
+def send_email_api(
+    recipients: list[str],
+    subject: str,
+    html: str | None = None,
+    text: str | None = None,
+):
     if notification_settings.SUPPRESS_SEND:
-        logger.info(f"SUPPRESS_SEND is enabled. Suppressing email to {recipients}")
+        logger.info(
+            f"SUPPRESS_SEND is enabled. Suppressing email to {recipients}"
+        )
         return {"status": "suppressed"}
 
     api_key = notification_settings.RESEND_API_KEY
+
     if api_key:
         headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
         }
+
         from_email = notification_settings.MAIL_FROM or "onboarding@resend.dev"
         from_name = notification_settings.MAIL_FROM_NAME or "FastShip"
-        sender = f"{from_name} <{from_email}>" if from_name and "<" not in from_email else from_email
+
+        sender = (
+            f"{from_name} <{from_email}>"
+            if from_name and "<" not in from_email
+            else from_email
+        )
 
         payload = {
             "from": sender,
             "to": recipients,
             "subject": subject,
         }
+
         if html:
             payload["html"] = html
+
         if text:
             payload["text"] = text
 
-        with httpx.Client(timeout=10.0) as client:
-            response = client.post("https://api.resend.com/emails", json=payload, headers=headers)
+        try:
+            with httpx.Client(timeout=10.0) as client:
+                response = client.post(
+                    "https://api.resend.com/emails",
+                    json=payload,
+                    headers=headers,
+                )
+
             response.raise_for_status()
             return response.json()
+
+        except httpx.HTTPStatusError as exc:
+            logger.error(
+                "Resend email delivery failed: HTTP %s - %s",
+                exc.response.status_code,
+                exc.response.text,
+            )
+            return {"status": "email_delivery_failed"}
+
+        except httpx.HTTPError:
+            logger.exception("Resend email delivery request failed")
+            return {"status": "email_delivery_failed"}
+
     else:
         # Fallback to FastMail SMTP if RESEND_API_KEY is not set
         subtype = MessageType.html if html else MessageType.plain
         body = html if html else text
+
         message = MessageSchema(
             recipients=recipients,
             subject=subject,
             body=body,
             subtype=subtype,
         )
+
         send_message(message)
+
         return {"status": "sent_via_smtp"}
 
 

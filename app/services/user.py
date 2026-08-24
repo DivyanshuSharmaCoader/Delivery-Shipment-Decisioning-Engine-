@@ -4,6 +4,7 @@ from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.exceptions import BadCredentials, ClientNotVerified, InvalidToken, BadPassword, UserAlreadyExists
 from app.database.models import User
+from app.worker.executor import execute
 from app.worker.tasks import send_email_with_template
 from .base import BaseService
 from sqlalchemy import select
@@ -43,7 +44,8 @@ class UserService(BaseService):
             "id": str(user.id)
         })
         prefix = router_prefix if router_prefix.startswith("/") else f"/{router_prefix}"
-        send_email_with_template.delay(
+        execute(
+            send_email_with_template,
             recipients = [user.email],
             subject="verify your account with FastShip",
             context={
@@ -92,7 +94,8 @@ class UserService(BaseService):
             return
         token = generate_url_safe_token({"id": str(user.id)}, salt="password_reset")
 
-        send_email_with_template.delay(
+        execute(
+            send_email_with_template,
             recipients=[user.email],
             subject = "Fastship Account Password Reset",
             context = {

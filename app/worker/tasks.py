@@ -8,6 +8,8 @@ from pathlib import Path
 from app.config import db_settings, notification_settings
 from app.utils import TEMPLATE_DIR
 
+import asyncio
+
 fastmail = FastMail(
             ConnectionConfig(
                 **notification_settings.model_dump(
@@ -22,7 +24,16 @@ twilio_client = Client(
              notification_settings.TWILIO_AUTH_TOKEN,
         )
 
-send_message = async_to_sync(fastmail.send_message)
+def send_message(*args, **kwargs):
+    try:
+        loop = asyncio.get_running_loop()
+    except RuntimeError:
+        loop = None
+
+    if loop and loop.is_running():
+        return loop.create_task(fastmail.send_message(*args, **kwargs))
+    else:
+        return async_to_sync(fastmail.send_message)(*args, **kwargs)
 
 app = Celery(
     "api-tasks",

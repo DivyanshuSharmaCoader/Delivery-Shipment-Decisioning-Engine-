@@ -1,19 +1,21 @@
-
-
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+
 _base_config = SettingsConfigDict(
-        env_file="./.env",
-        env_ignore_empty=True,
-        extra="ignore",
-    )
+    env_file="./.env",
+    env_ignore_empty=True,
+    extra="ignore",
+)
+
 
 class AppSettings(BaseSettings):
     APP_NAME: str = "FastShip"
     APP_DOMAIN: str = "localhost:8000"
     ALLOWED_ORIGINS: str = "http://localhost:5173"
-    
+    TASK_EXECUTION_MODE: str = "direct"  # "direct" or "celery"
+
     model_config = _base_config
+
 
 class DatabaseSettings(BaseSettings):
     POSTGRES_SERVER: str
@@ -23,28 +25,42 @@ class DatabaseSettings(BaseSettings):
     POSTGRES_DB: str
 
     REDIS_HOST: str
-    REDIS_PORT: int
-    REDIS_PASSWORD: str
-    REDIS_USERNAME: str
+    REDIS_PORT: int = 6379
+    REDIS_PASSWORD: str = ""
+    REDIS_USERNAME: str = ""
 
     model_config = _base_config
 
     @property
     def POSTGRES_URL(self):
-        return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+        return (
+            f"postgresql+asyncpg://"
+            f"{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
+            f"@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}"
+            f"/{self.POSTGRES_DB}"
+        )
 
     def REDIS_URL(self, db):
+        # Authenticated Redis, e.g. external/TLS connection
+        if self.REDIS_USERNAME and self.REDIS_PASSWORD:
+            return (
+                f"rediss://{self.REDIS_USERNAME}:{self.REDIS_PASSWORD}"
+                f"@{self.REDIS_HOST}:{self.REDIS_PORT}/{db}"
+                "?ssl_cert_reqs=CERT_NONE"
+            )
+
+        # Unauthenticated Redis, e.g. Render internal connection
         return (
-            f"rediss://{self.REDIS_USERNAME}:{self.REDIS_PASSWORD}"
-            f"@{self.REDIS_HOST}:{self.REDIS_PORT}/{db}"
-            "?ssl_cert_reqs=CERT_NONE"
-    )
+            f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/{db}"
+        )
+
 
 class SecuritySettings(BaseSettings):
     JWT_SECRET: str
     JWT_ALGORITHM: str
 
     model_config = _base_config
+
 
 class NotificationSettings(BaseSettings):
     MAIL_USERNAME: str
@@ -63,6 +79,7 @@ class NotificationSettings(BaseSettings):
     TWILIO_NUMBER: str
 
     model_config = _base_config
+
 
 app_settings = AppSettings()
 db_settings = DatabaseSettings()

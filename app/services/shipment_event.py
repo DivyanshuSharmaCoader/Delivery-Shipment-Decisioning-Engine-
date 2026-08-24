@@ -6,6 +6,7 @@ from app.database.redis import add_shipment_verification_code
 from app.services import delivery_partner
 from app.services.base import BaseService
 from app.utils import generate_url_safe_token
+from app.worker.executor import execute
 from app.worker.tasks import send_email_with_template, send_sms
 
 
@@ -96,7 +97,8 @@ class ShipmentEventService(BaseService):
                     await add_shipment_verification_code(shipment.id, code) 
 
                     if shipment.client_contact_phone:
-                        send_sms.delay(
+                        execute(
+                            send_sms,
                             to = shipment.client_contact_phone,
                             body = f"Your order is arriving soon! Share the {code} code with your"
                             "delivery executive to recieve your package."
@@ -118,7 +120,8 @@ class ShipmentEventService(BaseService):
                 context["id"] = shipment.id
                 template_name="mail_cancelled.html"
 
-        send_email_with_template.delay(
+        execute(
+            send_email_with_template,
             recipients=[shipment.client_contact_email],
             subject=subject,
             context=context,

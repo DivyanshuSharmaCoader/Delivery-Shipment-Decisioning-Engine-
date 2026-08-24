@@ -50,7 +50,7 @@ FastShip enables real-time business intelligence across the logistics lifecycle:
 - **Customer Communication Metrics**: Track notification delivery (Email/SMS) for service quality assurance
 
 ### Scalability Indicators
-- **Real-time Queue Processing**: Celery handles asynchronous task distribution across workers
+- **Celery-Based Task Architecture**: Background tasks (email, SMS, logging) are implemented as Celery tasks with a configurable execution mode — currently executed directly within the FastAPI process, structured for migration to dedicated Celery workers when infrastructure permits
 - **Database Performance**: PostgreSQL manages millions of shipment records with optimized relationship queries
 - **Concurrent User Capacity**: Stateless JWT authentication enables horizontal scaling
 
@@ -166,27 +166,35 @@ Send Response to User (High Latency)
 ```
 Customer Login Request
     ↓
-Queue Notification Task → Immediate Response
+Notification Task Dispatched → Immediate Response
     ↓
-Celery Worker Processes Email Asynchronously
+Task Executed (directly in-process OR via Celery worker)
     ↓
-SMTP Sends Email in Background
+SMTP Sends Email / Twilio Sends SMS
     ↓
-User Receives Instant Feedback (Low Latency)
+User Receives Instant Feedback
 ```
 
+### Dual-Mode Task Execution
+The application implements a **Celery-based background-task architecture** with Redis as the broker. All background tasks (email notifications, SMS delivery, logging) are defined as Celery tasks in `app/worker/tasks.py` and dispatched through a configurable execution layer (`app/worker/executor.py`).
+
+- **Current Deployment** (`TASK_EXECUTION_MODE=direct`): Task logic executes directly within the FastAPI service. No Celery worker or Redis broker queue is required.
+- **Future Deployment** (`TASK_EXECUTION_MODE=celery`): Tasks are dispatched via `.delay()` to a dedicated Celery worker through the Redis broker, enabling fully asynchronous, distributed processing.
+
+This architecture ensures **one source of truth** for all task/business logic — the same task implementation serves both execution modes with zero code duplication.
+
 ### Workflow Automation
-1. **Shipment Status Changes** → Celery tasks queued
+1. **Shipment Status Changes** → Notification tasks dispatched
 2. **Event Logging** → Recorded in PostgreSQL
-3. **Notification Tasks** → Distributed via Redis broker
+3. **Notification Tasks** → Email (SMTP) + SMS (Twilio) via configurable execution mode
 4. **Multi-Channel Delivery** → SMTP (Email) + Twilio (SMS) sent concurrently
 5. **Audit Trail** → Complete event history maintained
 
 **Impact**: 
-- 90%+ reduction in API response time
-- Improved user experience through instant feedback
-- Production-grade distributed task processing
+- Production-grade task architecture ready for distributed processing
+- Improved user experience through decoupled notification delivery
 - Non-blocking operations enable horizontal scaling
+- Cost-effective deployment without sacrificing architectural quality
 
 ---
 
@@ -305,7 +313,7 @@ This project demonstrates proficiency across **enterprise software engineering p
 ✅ **REST API Design** - Logical grouping, proper HTTP verbs, version-ready structure  
 ✅ **Database Modeling** - Normalized schema, foreign key relationships, enum constraints  
 ✅ **Authentication & Authorization** - OAuth2, JWT tokens, role-based access control  
-✅ **Asynchronous Processing** - Celery + Redis for non-blocking operations  
+✅ **Asynchronous Processing** - Celery-based task architecture with configurable direct/worker execution  
 ✅ **Infrastructure as Code** - Docker, Docker Compose, managed cloud services  
 ✅ **DevOps & CI/CD** - Automated deployment pipelines, multi-environment strategy  
 ✅ **Logging & Monitoring** - Custom middleware, request tracking, execution metrics  

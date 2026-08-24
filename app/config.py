@@ -73,6 +73,7 @@ class NotificationSettings(BaseSettings):
     MAIL_SSL_TLS: bool = False
     USE_CREDENTIALS: bool = True
     VALIDATE_CERTS: bool = False
+    SUPPRESS_SEND: int = 0
 
     TWILIO_SID: str
     TWILIO_AUTH_TOKEN: str

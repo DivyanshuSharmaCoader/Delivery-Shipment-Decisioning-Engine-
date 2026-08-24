@@ -44,7 +44,7 @@ class UserService(BaseService):
             "id": str(user.id)
         })
         prefix = router_prefix if router_prefix.startswith("/") else f"/{router_prefix}"
-        execute(
+        await execute(
             send_email_with_template,
             recipients = [user.email],
             subject="verify your account with FastShip",
@@ -94,7 +94,7 @@ class UserService(BaseService):
             return
         token = generate_url_safe_token({"id": str(user.id)}, salt="password_reset")
 
-        execute(
+        await execute(
             send_email_with_template,
             recipients=[user.email],
             subject = "Fastship Account Password Reset",

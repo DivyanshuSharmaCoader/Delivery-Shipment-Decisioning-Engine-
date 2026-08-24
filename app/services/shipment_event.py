@@ -97,7 +97,7 @@ class ShipmentEventService(BaseService):
                     await add_shipment_verification_code(shipment.id, code) 
 
                     if shipment.client_contact_phone:
-                        execute(
+                        await execute(
                             send_sms,
                             to = shipment.client_contact_phone,
                             body = f"Your order is arriving soon! Share the {code} code with your"
@@ -120,7 +120,7 @@ class ShipmentEventService(BaseService):
                 context["id"] = shipment.id
                 template_name="mail_cancelled.html"
 
-        execute(
+        await execute(
             send_email_with_template,
             recipients=[shipment.client_contact_email],
             subject=subject,

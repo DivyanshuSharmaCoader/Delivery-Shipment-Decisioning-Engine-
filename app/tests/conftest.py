@@ -48,6 +48,11 @@ async def seller_token(client: AsyncClient):
 async def setup_and_teardown():
     print("🧪 starting tests...")
 
+    from app.worker.tasks import fastmail, twilio_client
+    from unittest.mock import MagicMock
+    fastmail.config.SUPPRESS_SEND = 1
+    twilio_client.messages.create = MagicMock()
+
     app.dependency_overrides[get_session] = get_session_override
 
     async with engine.begin() as connection:

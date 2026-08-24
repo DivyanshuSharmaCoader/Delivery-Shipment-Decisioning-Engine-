@@ -15,20 +15,21 @@ FUTURE DEPLOYMENT (TASK_EXECUTION_MODE="celery"):
         celery -A app.worker.tasks.app worker --loglevel=info
 """
 
+import asyncio
 from app.config import app_settings
 
 
-def execute(task, *args, **kwargs):
+async def execute(task, *args, **kwargs):
     """Execute a Celery task either directly or via the Celery broker.
 
     Args:
         task: A Celery @app.task decorated function.
         *args, **kwargs: Arguments forwarded to the task.
 
-    In "direct" mode, calls task(*args, **kwargs) synchronously.
+    In "direct" mode, calls asyncio.to_thread(task, *args, **kwargs) to run
+    the task in a worker thread without blocking the FastAPI event loop.
     In "celery" mode, calls task.delay(*args, **kwargs) via broker.
     """
     if app_settings.TASK_EXECUTION_MODE == "celery":
-        task.delay(*args, **kwargs)
-    else:
-        task(*args, **kwargs)
+        return task.delay(*args, **kwargs)
+    return await asyncio.to_thread(task, *args, **kwargs)

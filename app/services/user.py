@@ -50,7 +50,7 @@ class UserService(BaseService):
             subject="verify your account with FastShip",
             context={
                 "username": user.name,
-                "verification_url": f"http://{app_settings.APP_DOMAIN}{prefix}/verify?token={token}"
+                "verification_url": f"https://{app_settings.APP_DOMAIN}{prefix}/verify?token={token}"
             },
             template_name="mail_email_verify.html",
         )

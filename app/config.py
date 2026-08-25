@@ -10,7 +10,7 @@ _base_config = SettingsConfigDict(
 
 class AppSettings(BaseSettings):
     APP_NAME: str = "FastShip"
-    APP_DOMAIN: str = "localhost:8000"
+    APP_DOMAIN: str = "fastship-backend-1-0-px6z.onrender.com"
     ALLOWED_ORIGINS: str = "http://localhost:5173"
     TASK_EXECUTION_MODE: str = "direct"  # "direct" or "celery"
 

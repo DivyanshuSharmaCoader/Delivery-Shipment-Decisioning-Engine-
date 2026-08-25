@@ -110,7 +110,7 @@ class ShipmentEventService(BaseService):
                 subject="Your Order is delivered"
                 context["seller"] = shipment.seller.name
                 token = generate_url_safe_token({"id": str(shipment.id)})
-                context["review_url"] = f"http://{app_settings.APP_DOMAIN}/shipment/review?token={token}"
+                context["review_url"] = f"https://{app_settings.APP_DOMAIN}/shipment/review?token={token}"
                 context["id"] = shipment.id
                 template_name="mail_delivered.html"
 

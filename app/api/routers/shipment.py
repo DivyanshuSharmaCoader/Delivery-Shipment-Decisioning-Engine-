@@ -165,7 +165,7 @@ async def submit_review_page(
         request = request,
         name = "review.html",
         context = {
-            "review_url": f"http://{app_settings.APP_DOMAIN}/shipment/review?token={token}"
+            "review_url": f"https://{app_settings.APP_DOMAIN}/shipment/review?token={token}"
         }
     )
 
